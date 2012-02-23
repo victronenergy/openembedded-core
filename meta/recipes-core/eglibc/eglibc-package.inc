@@ -120,4 +120,5 @@ eglibc_package_preprocess () {
 		# This dir only exists to hold locales
 		rm -rf ${PKGD}${exec_prefix}/lib
 	fi
+	rm -rf ${PKGD}/${libdir}/locale
 }
