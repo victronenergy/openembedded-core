@@ -1,10 +1,11 @@
 DESCRIPTION = "SDK tools for Qt/[X11|Mac|Embedded] version 4.x"
-DEPENDS = "zlib-nativesdk dbus-nativesdk libx11-nativesdk qt4-native"
+DEPENDS = "zlib-nativesdk dbus-nativesdk qt4-native"
+# note needs a space at the end for some reason...
+DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'libx11-nativesdk', '', d)} "
 SECTION = "libs"
 HOMEPAGE = "http://qt.nokia.com"
 LICENSE = "LGPLv2.1 | GPLv3"
-
-INC_PR = "r12"
+INC_PR = "r13"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/qt4-${PV}:"
 
