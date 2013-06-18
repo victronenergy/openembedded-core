@@ -35,6 +35,11 @@ CONFFILES_${PN}-mdev = "${sysconfdir}/mdev.conf"
 
 RRECOMMENDS_${PN} = "${PN}-syslog ${PN}-udhcpc"
 
+# note: the busybox wget version was used, but could hang. It is replaced by the full
+# wget. To make sure there is always a wget installed (opkg depends on it), wget is now
+# a dependencies of busybox.
+RDEPENDS_${PN} = "wget"
+
 inherit cml1 update-rc.d
 
 # internal helper

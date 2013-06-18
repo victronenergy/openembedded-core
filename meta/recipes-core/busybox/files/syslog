@@ -54,8 +54,8 @@ fi
 case "$1" in
   start)
 	echo -n "Starting syslogd/klogd: "
-	start-stop-daemon -S -b -n syslogd -a /sbin/syslogd -- -n $SYSLOG_ARGS
-	start-stop-daemon -S -b -n klogd -a /sbin/klogd -- -n
+	start-stop-daemon -S -b -n syslogd -a /sbin/syslogd -- $SYSLOG_ARGS
+	start-stop-daemon -S -b -n klogd -a /sbin/klogd -- 
 	echo "done"
 	;;
   stop)

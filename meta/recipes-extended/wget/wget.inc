@@ -6,10 +6,7 @@ DEPENDS = "openssl"
 
 INC_PR = "r16"
 
-inherit autotools gettext update-alternatives
+inherit autotools gettext
 
 EXTRA_OECONF = "--with-libc --enable-ipv6 --with-libssl-prefix=${STAGING_DIR_HOST} \
                 --with-ssl=openssl --disable-rpath --disable-iri"
-
-ALTERNATIVE_${PN} = "wget"
-ALTERNATIVE_PRIORITY = "100"
