@@ -9,7 +9,7 @@ def base_detect_revision(d):
 
     for scm in scms:
         rev = scm(path, d)
-        if rev <> "<unknown>":
+        if rev != "<unknown>":
             return rev
 
     return "<unknown>"
@@ -21,7 +21,7 @@ def base_detect_branch(d):
 
     for scm in scms:
         rev = scm(path, d)
-        if rev <> "<unknown>":
+        if rev != "<unknown>":
             return rev.strip()
 
     return "<unknown>"
@@ -52,12 +52,11 @@ def base_get_metadata_monotone_revision(path, d):
     return monotone_revision
 
 def base_get_metadata_svn_revision(path, d):
-    revision = "<unknown>"
-    try:
-        revision = file( "%s/.svn/entries" % path ).readlines()[3].strip()
-    except IOError:
-        pass
-    return revision
+    f = os.popen("cd %s; svn info | grep Revision: | awk '{print $2}'" % path)
+    rev = f.read()
+    if f.close() is None:
+        return rev
+    return "<unknown>"
 
 def base_get_metadata_git_branch(path, d):
     branch = os.popen('cd %s; git branch 2>&1 | grep "^* " | tr -d "* "' % path).read()
