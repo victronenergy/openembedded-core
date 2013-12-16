@@ -1,0 +1,49 @@
+From df0d94a31369bad556ceef5701c99efcfb9233ab Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Mon, 16 Dec 2013 10:33:36 +0100
+Subject: [PATCH 1/2] doc: fix sheepdog invalid texi @table @list syntax
+
+---
+ qemu-options.hx | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
+
+diff --git a/qemu-options.hx b/qemu-options.hx
+index 3c411c4..92d6d81 100644
+--- a/qemu-options.hx
++++ b/qemu-options.hx
+@@ -1964,25 +1964,19 @@ QEMU supports using either local sheepdog devices or remote networked
+ devices.
+ 
+ Syntax for specifying a sheepdog device
+-@table @list
+-``sheepdog:<vdiname>''
+-
+-``sheepdog:<vdiname>:<snapid>''
+-
+-``sheepdog:<vdiname>:<tag>''
+-
+-``sheepdog:<host>:<port>:<vdiname>''
+-
+-``sheepdog:<host>:<port>:<vdiname>:<snapid>''
+-
+-``sheepdog:<host>:<port>:<vdiname>:<tag>''
++@table @code
++@item sheepdog:<vdiname>
++@item sheepdog:<vdiname>:<snapid>
++@item sheepdog:<vdiname>:<tag>
++@item sheepdog:<host>:<port>:<vdiname>
++@item sheepdog:<host>:<port>:<vdiname>:<snapid>
++@item sheepdog:<host>:<port>:<vdiname>:<tag>
+ @end table
+ 
+ Example
+ @example
+ qemu-system-i386 --drive file=sheepdog:192.0.2.1:30000:MyVirtualMachine
+ @end example
+-
+ See also @url{http://http://www.osrg.net/sheepdog/}.
+ 
+ @end table
+-- 
+1.8.3.2
+

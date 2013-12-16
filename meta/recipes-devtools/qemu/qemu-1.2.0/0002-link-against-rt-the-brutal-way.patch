@@ -1,0 +1,25 @@
+From 4d3bb499ca41f4a0e923886ed366020aa9332598 Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Mon, 16 Dec 2013 11:00:41 +0100
+Subject: [PATCH 2/2] link against rt (the brutal way)
+
+---
+ rules.mak | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rules.mak b/rules.mak
+index 1b173aa..1d1ab3f 100644
+--- a/rules.mak
++++ b/rules.mak
+@@ -31,7 +31,7 @@ endif
+ %.o: %.m
+ 	$(call quiet-command,$(OBJCC) $(QEMU_INCLUDES) $(QEMU_CFLAGS) $(QEMU_DGFLAGS) $(CFLAGS) -c -o $@ $<,"  OBJC  $(TARGET_DIR)$@")
+ 
+-LINK = $(call quiet-command,$(CC) $(QEMU_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $(sort $(1)) $(LIBS),"  LINK  $(TARGET_DIR)$@")
++LINK = $(call quiet-command,$(CC) $(QEMU_CFLAGS) $(CFLAGS) $(LDFLAGS) -lrt -o $@ $(sort $(1)) $(LIBS),"  LINK  $(TARGET_DIR)$@")
+ 
+ %$(EXESUF): %.o
+ 	$(call LINK,$^)
+-- 
+1.8.3.2
+
