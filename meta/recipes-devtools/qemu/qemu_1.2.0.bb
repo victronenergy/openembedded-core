@@ -13,6 +13,8 @@ SRC_URI = "\
     file://fallback-to-safe-mmap_min_addr.patch \
     file://larger_default_ram_size.patch \
     file://arm-bgr.patch \
+    file://0001-doc-fix-sheepdog-invalid-texi-table-list-syntax.patch \
+    file://0002-link-against-rt-the-brutal-way.patch \
     "
 SRC_URI[md5sum] = "78eb1e984f4532aa9f2bdd3c127b5b61"
 SRC_URI[sha256sum] = "c8b84420d9f4869397f84cad2dabd9a475b7723d619a924a873740353e9df936"
