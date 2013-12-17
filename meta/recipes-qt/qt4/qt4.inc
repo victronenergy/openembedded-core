@@ -377,6 +377,7 @@ do_install() {
 	echo 'export OE_QMAKE_LIBDIR_QT=${libdir}' >> $script
 	echo 'export OE_QMAKE_INCDIR_QT=${includedir}/${QT_DIR_NAME}' >> $script
 	echo 'export OE_QMAKE_MOC=${bindir}/moc' >> $script
+	echo 'export OE_QMAKE_OBJCOPY=objcopy' >> $script
 	echo 'export OE_QMAKE_UIC=${bindir}/uic' >> $script
 	echo 'export OE_QMAKE_UIC3=${bindir}/uic3' >> $script
 	echo 'export OE_QMAKE_RCC=${bindir}/rcc' >> $script

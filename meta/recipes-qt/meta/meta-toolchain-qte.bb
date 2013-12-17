@@ -20,6 +20,7 @@ toolchain_create_sdk_env_script_append() {
     echo 'export OE_QMAKE_LIBDIR_QT=${SDKTARGETSYSROOT}/${libdir}' >> $script
     echo 'export OE_QMAKE_INCDIR_QT=${SDKTARGETSYSROOT}/${includedir}/${QT_DIR_NAME}' >> $script
     echo 'export OE_QMAKE_MOC=${QT_TOOLS_PREFIX}/moc4' >> $script
+    echo 'export OE_QMAKE_OBJCOPY=${TARGET_PREFIX}objcopy' >> $script
     echo 'export OE_QMAKE_UIC=${QT_TOOLS_PREFIX}/uic4' >> $script
     echo 'export OE_QMAKE_UIC3=${QT_TOOLS_PREFIX}/uic34' >> $script
     echo 'export OE_QMAKE_RCC=${QT_TOOLS_PREFIX}/rcc4' >> $script
