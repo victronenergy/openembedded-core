@@ -1,0 +1,74 @@
+From 341853a30b725a8fb3aad6fed9c7e2040c715fd7 Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Mon, 30 Dec 2013 16:57:29 +0100
+Subject: [PATCH] fix gcc 4.8 native build
+
+---
+ src/addr2line.c   | 4 ++--
+ src/ar.c          | 2 +-
+ src/nm.c          | 5 +++--
+ tests/line2addr.c | 2 +-
+ 4 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/src/addr2line.c b/src/addr2line.c
+index 57f1eca..48f017b 100644
+--- a/src/addr2line.c
++++ b/src/addr2line.c
+@@ -447,10 +447,10 @@ handle_address (const char *string, Dwfl *dwfl)
+       bool parsed = false;
+       int i, j;
+       char *name = NULL;
+-      if (sscanf (string, "(%a[^)])%" PRIiMAX "%n", &name, &addr, &i) == 2
++      if (sscanf (string, "(%m[^)])%" PRIiMAX "%n", &name, &addr, &i) == 2
+ 	  && string[i] == '\0')
+ 	parsed = adjust_to_section (name, &addr, dwfl);
+-      switch (sscanf (string, "%a[^-+]%n%" PRIiMAX "%n", &name, &i, &addr, &j))
++      switch (sscanf (string, "%m[^-+]%n%" PRIiMAX "%n", &name, &i, &addr, &j))
+ 	{
+ 	default:
+ 	  break;
+diff --git a/src/ar.c b/src/ar.c
+index 149d116..80c9d95 100644
+--- a/src/ar.c
++++ b/src/ar.c
+@@ -915,7 +915,7 @@ do_oper_delete (const char *arfname, char **argv, int argc,
+ 		long int instance)
+ {
+   bool *found = alloca (sizeof (bool) * argc);
+-  memset (found, '\0', sizeof (found));
++  memset (found, '\0', sizeof (sizeof (bool) * argc));
+ 
+   /* List of the files we keep.  */
+   struct armem *to_copy = NULL;
+diff --git a/src/nm.c b/src/nm.c
+index 01519a5..8ca9040 100644
+--- a/src/nm.c
++++ b/src/nm.c
+@@ -752,8 +752,9 @@ show_symbols_sysv (Ebl *ebl, GElf_Word strndx,
+ 			       gelf_getshdr (scn, &shdr_mem)->sh_name);
+       if (unlikely (name == NULL))
+ 	{
+-	  name = alloca (sizeof "[invalid sh_name 0x12345678]");
+-	  snprintf (name, sizeof name, "[invalid sh_name %#" PRIx32 "]",
++	  size_t len = sizeof "[invalid sh_name 0x12345678]";
++	  name = alloca (len);
++	  snprintf (name, len, "[invalid sh_name %#" PRIx32 "]",
+ 		    gelf_getshdr (scn, &shdr_mem)->sh_name);
+ 	}
+       scnnames[elf_ndxscn (scn)] = name;
+diff --git a/tests/line2addr.c b/tests/line2addr.c
+index 1180062..5630da3 100644
+--- a/tests/line2addr.c
++++ b/tests/line2addr.c
+@@ -132,7 +132,7 @@ main (int argc, char *argv[])
+     {
+       struct args a = { .arg = argv[cnt] };
+ 
+-      switch (sscanf (a.arg, "%a[^:]:%d", &a.file, &a.line))
++      switch (sscanf (a.arg, "%m[^:]:%d", &a.file, &a.line))
+ 	{
+ 	default:
+ 	case 0:
+-- 
+1.8.3.2
+
