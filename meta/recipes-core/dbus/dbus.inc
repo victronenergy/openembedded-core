@@ -11,7 +11,7 @@ DEPENDS_virtclass-native = "expat-native virtual/libintl-native"
 DEPENDS_virtclass-nativesdk = "nativesdk-expat virtual/nativesdk-libintl"
 DEPENDS_virtclass-nativesdk += "${@base_contains('DISTRO_FEATURES', 'x11', ' virtual/libx11', '', d)}"
 
-INC_PR = "r6"
+INC_PR = "r8"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch; \

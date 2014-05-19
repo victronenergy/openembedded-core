@@ -57,8 +57,9 @@ start_it_up()
   dbus-uuidgen --ensure  
 
   echo -n "Starting $DESC: "
+  # note dbus-daemon-watch.sh start dbus-daemon to catch crashes
   start-stop-daemon --start --quiet --pidfile $PIDFILE \
-    --user $DAEMONUSER --exec $DAEMON -- --system $PARAMS
+    --user $DAEMONUSER --exec /usr/bin/dbus-daemon-watch.sh -- --system $PARAMS
   echo "$NAME."
   if [ -d $EVENTDIR ]; then
       run-parts --arg=start $EVENTDIR
@@ -67,6 +68,11 @@ start_it_up()
 
 shut_it_down()
 {
+  # kill the script monitoring dbus execution
+  if [ "X${pid=$(pidof -x /usr/bin/dbus-daemon-watch.sh)}" != "X" ]; then
+    kill $pid
+  fi
+
   if [ -d $EVENTDIR ]; then
       # TODO: --reverse when busybox supports it
       run-parts --arg=stop $EVENTDIR
