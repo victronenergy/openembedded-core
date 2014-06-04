@@ -44,6 +44,10 @@ Supported SRC_URI options are:
    checkout code and tracking branch requirements.
    The default is "0", set bareclone=1 if needed.
 
+- submodules
+  Also checkout submodules when set to 1. Note, no copy of the submodules is
+  stored in downloads!
+
 """
 
 #Copyright (C) 2005 Richard Purdie
@@ -269,6 +273,10 @@ class Git(FetchMethod):
                 runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd, d)
             else:
                 runfetchcmd("%s checkout %s" % (ud.basecmd, ud.revisions[ud.names[0]]), d)
+
+        if ud.parm.get("submodules","0") == "1":
+            runfetchcmd("git submodule update --init --recursive", d)
+
         return True
 
     def clean(self, ud, d):
