@@ -39,24 +39,6 @@ cd "$BUILDDIR"
 
 TEMPLATECONF=${TEMPLATECONF:-meta-yocto/conf}
 
-# 
-# $TEMPLATECONF can point to a directory for the template local.conf & bblayers.conf
-#
-if [ "x" != "x$TEMPLATECONF" ]; then
-    if ! (test -d "$TEMPLATECONF"); then
-	# Allow TEMPLATECONF=meta-xyz/conf as a shortcut
-	if [ -d "$OEROOT/$TEMPLATECONF" ]; then
-	    TEMPLATECONF="$OEROOT/$TEMPLATECONF"
-	fi
-	if ! (test -d "$TEMPLATECONF"); then
-	    echo >&2 "Error: '$TEMPLATECONF' must be a directory containing local.conf & bblayers.conf"
-	    return
-	fi
-    fi
-    OECORELAYERCONF="$TEMPLATECONF/bblayers.conf.sample"
-    OECORELOCALCONF="$TEMPLATECONF/local.conf.sample"
-fi
-
 if [ "x" = "x$OECORELOCALCONF" ]; then
     OECORELOCALCONF="$OEROOT/meta/conf/local.conf.sample"
 fi
