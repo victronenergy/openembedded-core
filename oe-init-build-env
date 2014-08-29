@@ -40,5 +40,6 @@ else
         [ -n "$BUILDDIR" ] && cd $BUILDDIR
    unset OEROOT
    unset BBPATH
+   PS1="$PS1\e[0;36mbb> \e[m"
 fi
 
