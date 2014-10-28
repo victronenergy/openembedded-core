@@ -28,6 +28,11 @@ FILES_mtd-utils-jffs2 = "${sbindir}/mkfs.jffs2 ${sbindir}/jffs2dump ${sbindir}/j
 FILES_mtd-utils-ubifs = "${sbindir}/mkfs.ubifs ${sbindir}/ubi*"
 FILES_mtd-utils-misc = "${sbindir}/nftl* ${sbindir}/ftl* ${sbindir}/rfd* ${sbindir}/doc* ${sbindir}/serve_image ${sbindir}/recv_image"
 
+# since this package is split, update the original package first.
+RDEPENDS_mtd-utils-jffs2 += "${PN} (= ${PV}-${PR})"
+RDEPENDS_mtd-utils-misc += "${PN} (= ${PV}-${PR})"
+RDEPENDS_mtd-utils-ubifs += "${PN} (= ${PV}-${PR})"
+
 PARALLEL_MAKE = ""
 
 BBCLASSEXTEND = "native"
