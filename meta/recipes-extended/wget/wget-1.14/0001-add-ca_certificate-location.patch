@@ -1,0 +1,23 @@
+From d24d123b82f48b7847991b10284240d0391d0ffa Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Wed, 28 Jan 2015 17:44:59 +0100
+Subject: [PATCH] add ca_certificate location
+
+---
+ doc/sample.wgetrc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/doc/sample.wgetrc b/doc/sample.wgetrc
+index 064ceb1..1185a25 100644
+--- a/doc/sample.wgetrc
++++ b/doc/sample.wgetrc
+@@ -123,3 +123,6 @@
+ 
+ # Force the default remote server encoding
+ #remoteencoding = UTF-8
++
++# https root certificates
++ca_certificate = /etc/ssl/certs/ca-certificates.crt
+-- 
+1.9.1
+
