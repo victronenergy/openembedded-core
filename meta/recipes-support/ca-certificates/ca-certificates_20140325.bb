@@ -18,11 +18,13 @@ SRC_URI = "git://anonscm.debian.org/collab-maint/ca-certificates.git \
            file://0001-update-ca-certificates-remove-c-rehash.patch \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://default-sysroot.patch \
-           file://sbindir.patch"
+           file://sbindir.patch \
+           file://ccgx-ca.crt"
 
 SRC_URI += "file://0001-Update-mozilla-certdata.txt-to-version-1.98.patch"
 
 S = "${WORKDIR}/git"
+PR="r1"
 
 inherit allarch
 
@@ -36,6 +38,9 @@ do_install () {
                ${D}${sysconfdir}/ssl/certs \
                ${D}${sysconfdir}/ca-certificates/update.d
     oe_runmake 'DESTDIR=${D}' install
+
+    install -d ${D}${datadir}/ca-certificates/victronenergy
+    install ${WORKDIR}/ccgx-ca.crt ${D}${datadir}/ca-certificates/victronenergy
 
     install -d ${D}${mandir}/man8
     install -m 0644 sbin/update-ca-certificates.8 ${D}${mandir}/man8/
