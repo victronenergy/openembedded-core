@@ -11,8 +11,6 @@
 # URL that points to a directory containing a Familiar
 # Packages file, and <target-path> should be a directory
 # that exists on the target system.
-src/gz ccgx http://www.victronenergy.com/feeds/ccgx/1.0/ccgx
-src/gz all http://www.victronenergy.com/feeds/ccgx/1.0/all
 
 # Proxy Support
 #option http_proxy http://proxy.tld:3128
