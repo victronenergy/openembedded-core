@@ -6,7 +6,7 @@ SUMMARY = "Minimal boot requirements"
 DESCRIPTION = "The minimal set of packages required to boot the system"
 LICENSE = "MIT"
 DEPENDS = "virtual/kernel"
-PR = "r10"
+PR = "r13"
 
 inherit packagegroup
 
@@ -34,10 +34,7 @@ RDEPENDS_${PN} = "\
     base-files \
     base-passwd \
     busybox \
-    ${@base_contains("MACHINE_FEATURES", "rtc", "busybox-hwclock", "", d)} \
     ${VIRTUAL-RUNTIME_initscripts} \
-    ${@base_contains("MACHINE_FEATURES", "keyboard", "${VIRTUAL-RUNTIME_keymaps}", "", d)} \
-    modutils-initscripts \
     netbase \
     ${VIRTUAL-RUNTIME_login_manager} \
     ${VIRTUAL-RUNTIME_init_manager} \
