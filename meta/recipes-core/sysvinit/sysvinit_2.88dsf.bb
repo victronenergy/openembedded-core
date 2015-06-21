@@ -5,7 +5,7 @@ SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r8"
+PR = "r7"
 
 RDEPENDS_${PN} = "${PN}-inittab"
 
@@ -72,7 +72,7 @@ do_install () {
 	install -m 0755    ${WORKDIR}/bootlogd.init     ${D}${sysconfdir}/init.d/bootlogd
 	ln -sf bootlogd ${D}${sysconfdir}/init.d/stop-bootlogd
 	install -d ${D}${sysconfdir}/rcS.d
-	ln -sf ../init.d/bootlogd ${D}${sysconfdir}/rcS.d/S12bootlogd
+	ln -sf ../init.d/bootlogd ${D}${sysconfdir}/rcS.d/S07bootlogd
 	for level in 2 3 4 5; do
 		install -d ${D}${sysconfdir}/rc$level.d
 		ln -s ../init.d/stop-bootlogd ${D}${sysconfdir}/rc$level.d/S99stop-bootlogd
