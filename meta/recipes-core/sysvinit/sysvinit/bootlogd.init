@@ -51,20 +51,8 @@ case "$ACTION" in
 		echo "$NAME."
 		;;
 	stop)
-		echo -n "Stopping $DESC: "
+		echo "Stopping $DESC"
 		start-stop-daemon --stop --quiet --exec $DAEMON
-
-		if [ "$STOPPER" ] && [ -f /var/log/boot ] && \
-		   [ -f /var/log/boot~ ]
-		then
-			cd /var/log
-			chgrp adm boot
-			savelog -p -c 5 boot > /dev/null 2>&1
-			mv boot.0 boot
-			mv boot~ boot.0
-		fi
-
-		echo "$NAME."
 		;;
 	 restart|force-reload)
 		echo -n "Restarting $DESC: "
