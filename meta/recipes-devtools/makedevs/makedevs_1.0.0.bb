@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 SECTION = "base"
 SRC_URI = "file://makedevs.c \
            file://COPYING.patch"
-PR = "r7"
+PR = "r8"
 
 do_configure() {
 	install -m 0644 ${WORKDIR}/makedevs.c ${S}/
