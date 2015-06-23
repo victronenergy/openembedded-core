@@ -187,7 +187,7 @@ static int interpret_table_entry(char *line)
 	unsigned long mode = 0755, uid = 0, gid = 0, major = 0, minor = 0;
 	unsigned long start = 0, increment = 1, count = 0;
 
-	if (0 > sscanf(line, "%40s %c %lo %lu %lu %lu %lu %lu %lu %lu", path,
+	if (0 > sscanf(line, "%400s %c %lo %lu %lu %lu %lu %lu %lu %lu", path,
 		    &type, &mode, &uid, &gid, &major, &minor, &start,
 		    &increment, &count)) 
 	{
