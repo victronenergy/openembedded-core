@@ -1,13 +1,12 @@
-PR = "r2"
 LICENSE = "GPLv3 & LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://tests/COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://glob/COPYING.LIB;md5=4a770b67e6be0f60da244beb2de0fce4"
 require make.inc
 
-SRC_URI += "file://expand_MAKEFLAGS.patch"
+EXTRA_OECONF += "--without-guile"
 
-SRC_URI[md5sum] = "1a11100f3c63fcf5753818e59d63088f"
-SRC_URI[sha256sum] = "e2c1a73f179c40c71e2fe8abf8a8a0688b8499538512984da4a76958d0402966"
+SRC_URI[md5sum] = "57a7a224a822f94789a587ccbcedff69"
+SRC_URI[sha256sum] = "0bc7613389650ee6a24554b52572a272f7356164fd2c4132b0bcf13123e4fca5"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
