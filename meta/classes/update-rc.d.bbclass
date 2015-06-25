@@ -18,6 +18,7 @@ if test "x$D" != "x"; then
 else
 	OPT="-s"
 fi
+update-rc.d $OPT -f ${INITSCRIPT_NAME} remove
 update-rc.d $OPT ${INITSCRIPT_NAME} ${INITSCRIPT_PARAMS}
 }
 
