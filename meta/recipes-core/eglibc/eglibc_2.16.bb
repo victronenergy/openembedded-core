@@ -35,6 +35,7 @@ SRC_URI = "svn://www.eglibc.org/svn/branches/;module=${EGLIBC_BRANCH};protocol=h
            file://0001-remove-texinfo-test-version-5-cannot-deal-with.patch \
            file://resolv.patch \
            file://0001-backport-PATCH-Fix-parsing-of-numeric-hosts-in-getho.patch \
+           file://0001-allow-make-v4.patch \
           "
 LIC_FILES_CHKSUM = "file://LICENSES;md5=98a1128c4b58120182cbea3b1752d8b9 \
       file://COPYING;md5=393a5ca445f6965873eca0259a17f833 \
