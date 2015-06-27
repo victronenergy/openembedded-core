@@ -194,7 +194,7 @@ mv "$MODULESTMPFILE" "$MODULESFILE"
 
 # Don't run modutils.sh if systemd is installed
 if [ $first_time -eq 1 ] && [ ! -e /bin/systemctl ]; then
-  /etc/init.d/modutils.sh || true
+  [ -e /etc/init.d/modutils.sh ] && /etc/init.d/modutils.sh || true
 fi
 
 # We also call depmod here to stop insmod from complaining that modules.conf
