@@ -1,0 +1,44 @@
+From 49c77ff343755ba515d70dad9aee158c4d1e0346 Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Mon, 29 Jun 2015 22:28:08 +0200
+Subject: [PATCH] disable supressing >= 0x7F characters in printable_string
+
+while the intend is likely to only suppress ascii in a possible wrong
+code page, this cripples UTF-8 support. Hence make this an (disabled)
+option so UTF-8 works properly.
+---
+ libbb/printable_string.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/libbb/printable_string.c b/libbb/printable_string.c
+index a316f60..2387b56 100644
+--- a/libbb/printable_string.c
++++ b/libbb/printable_string.c
+@@ -31,8 +31,10 @@ const char* FAST_FUNC printable_string(uni_stat_t *stats, const char *str)
+ 		}
+ 		if (c < ' ')
+ 			break;
++#if CHAR_7BIT_ONLY
+ 		if (c >= 0x7f)
+ 			break;
++#endif
+ 		s++;
+ 	}
+ 
+@@ -45,8 +47,12 @@ const char* FAST_FUNC printable_string(uni_stat_t *stats, const char *str)
+ 			unsigned char c = *d;
+ 			if (c == '\0')
+ 				break;
+-			if (c < ' ' || c >= 0x7f)
++			if (c < ' ')
++				*d = '?';
++#if CHAR_7BIT_ONLY
++			if (c >= 0x7f)
+ 				*d = '?';
++#endif
+ 			d++;
+ 		}
+ 		if (stats) {
+-- 
+1.9.1
+
