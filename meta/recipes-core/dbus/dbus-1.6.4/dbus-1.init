@@ -22,18 +22,6 @@ DAEMONUSER=messagebus           # must match /etc/dbus-1/system.conf
 PIDFILE=/var/run/messagebus.pid # must match /etc/dbus-1/system.conf
 UUIDDIR=/var/lib/dbus
 DESC="system message bus"
-EVENTDIR=/etc/dbus-1/event.d
-
-test -x $DAEMON || exit 0
-
-# Source defaults file; edit that file to configure this script.
-ENABLED=1
-PARAMS=""
-if [ -e /etc/default/dbus ]; then
-  . /etc/default/dbus
-fi
-
-test "$ENABLED" != "0" || exit 0
 
 start_it_up()
 {
@@ -53,17 +41,15 @@ start_it_up()
     chown $DAEMONUSER $UUIDDIR
     chgrp $DAEMONUSER $UUIDDIR
   fi
- 
-  dbus-uuidgen --ensure  
 
-  echo -n "Starting $DESC: "
+  dbus-uuidgen --ensure
+
+  echo "Starting $DESC"
   # note dbus-daemon-watch.sh start dbus-daemon to catch crashes
   start-stop-daemon --start --quiet --pidfile $PIDFILE \
-    --user $DAEMONUSER --exec /usr/bin/dbus-daemon-watch.sh -- --system $PARAMS
-  echo "$NAME."
-  if [ -d $EVENTDIR ]; then
-      run-parts --arg=start $EVENTDIR
-  fi
+    --user $DAEMONUSER --exec /usr/bin/dbus-daemon-watch.sh -- --system
+  # wait for the socket creation
+  inotifywait -e create /var/run/dbus --timeout 10
 }
 
 shut_it_down()
@@ -73,18 +59,8 @@ shut_it_down()
     kill $pid
   fi
 
-  if [ -d $EVENTDIR ]; then
-      # TODO: --reverse when busybox supports it
-      run-parts --arg=stop $EVENTDIR
-  fi
-  echo -n "Stopping $DESC: "
-  start-stop-daemon --stop  --quiet --pidfile $PIDFILE \
-    --user $DAEMONUSER
-  # We no longer include these arguments so that start-stop-daemon
-  # can do its job even given that we may have been upgraded.
-  # We rely on the pidfile being sanely managed
-  # --exec $DAEMON -- --system $PARAMS
-  echo "$NAME."
+  echo "Stopping $DESC"
+  start-stop-daemon --stop  --quiet --pidfile $PIDFILE --user $DAEMONUSER
   rm -f $PIDFILE
 }
 
