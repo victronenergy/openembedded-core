@@ -8,8 +8,8 @@ id:5:initdefault:
 # This is run first except when booting in emergency (-b) mode.
 si::sysinit:/etc/init.d/rcS
 
-# What to do in single-user mode.
-~~:S:wait:/sbin/sulogin
+# What to do in single-user mode -> start emergency shell
+~~:S:wait:/bin/sh
 
 # /etc/init.d executes the S and K scripts upon change
 # of runlevel.
