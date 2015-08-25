@@ -1,48 +1,33 @@
-# The Boost web site provides free peer-reviewed portable
-# C++ source libraries. The emphasis is on libraries which
-# work well with the C++ Standard Library. The libraries are
-# intended to be widely useful, and are in regular use by
-# thousands of programmers across a broad spectrum of applications.
-DESCRIPTION = "Free peer-reviewed portable C++ source libraries"
-HOMEPAGE = "http://www.boost.org/"
+SUMMARY = "Free peer-reviewed portable C++ source libraries"
 SECTION = "libs"
-DEPENDS = "boost-native zlib"
-DEPENDS_virtclass-native = ""
-LICENSE = "BSL-1.0 & MIT & Python-2.0"
+DEPENDS = "bjam-native zlib bzip2"
 
 ARM_INSTRUCTION_SET = "arm"
 
-BOOST_VER = "${@"_".join(d.getVar("PV",1).split("."))}"
-BOOST_MAJ = "${@"_".join(d.getVar("PV",1).split(".")[0:2])}"
-BOOST_P = "boost_${BOOST_VER}"
-
-INC_PR = "r4"
-
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BOOST_P}.tar.bz2"
-
-S = "${WORKDIR}/${BOOST_P}"
-
 BOOST_LIBS = "\
+	atomic \
+	chrono \
 	date_time \
 	filesystem \
 	graph \
 	iostreams \
+	log \
 	program_options \
+	random \
 	regex \
+	serialization \
 	signals \
 	system \
 	test \
 	thread \
 	"
 
-# FIXME: for some reason this fails on powerpc
-#BOOST_LIBS += "serialization"
-
-# To enable python, uncomment the following:
-#BOOST_LIBS += "python"
-#DEPENDS += "python"
-#PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
-#PYTHON_VERSION = "2.7"
+# optional boost-python library
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[python] = ",,python python3"
+BOOST_LIBS += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python python3', '', d)}"
+inherit python-dir
+PYTHON_ROOT = "${STAGING_DIR_HOST}/${prefix}"
 
 # Make a package for each library, plus -dev
 PACKAGES = "${PN}-dbg ${BOOST_PACKAGES}"
@@ -50,9 +35,16 @@ python __anonymous () {
     packages = []
     extras = []
     for lib in d.getVar('BOOST_LIBS', True).split( ):
-            pkg = "boost-%s" % lib.replace("_", "-")
+        # BJAM does not know '--with-python3' (only --with-python)
+        if lib != "python3":
             extras.append("--with-%s" % lib)
-            packages.append(pkg)
+        pkg = "boost-%s" % lib.replace("_", "-")
+        packages.append(pkg)
+        if lib == "python":
+            # special: python*.so matches python3.so !!
+            if not d.getVar("FILES_%s" % pkg, True):
+                    d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s.so.*" % lib)
+        else:
             if not d.getVar("FILES_%s" % pkg, True):
                     d.setVar("FILES_%s" % pkg, "${libdir}/libboost_%s*.so.*" % lib)
     d.setVar("BOOST_PACKAGES", " ".join(packages))
@@ -73,11 +65,11 @@ FILES_${PN}-staticdev = "${libdir}/libboost_*.a"
 # "boost" is a metapackage which pulls in all boost librabries
 PACKAGES += "${PN}"
 RRECOMMENDS_${PN} += "${BOOST_PACKAGES}"
-RRECOMMENDS_${PN}_virtclass-native = ""
+RRECOMMENDS_${PN}_class-native = ""
 ALLOW_EMPTY_${PN} = "1"
 
 # to avoid GNU_HASH QA errors added LDFLAGS to ARCH; a little bit dirty but at least it works
-TARGET_CC_ARCH += " ${LDFLAGS}" 
+TARGET_CC_ARCH += "${LDFLAGS}"
 
 # Oh yippee, a new build system, it's sooo cooool I could eat my own
 # foot.  inlining=on lets the compiler choose, I think.  At least this
@@ -109,44 +101,67 @@ EQD = '\"'
 #boost.bb:   "...  '-sGCC=... '${SQD}'-DBOOST_PLATFORM_CONFIG=${EQD}config${EQD}'${SQD} ..."
 BJAM_CONF = "${SQD}'-DBOOST_PLATFORM_CONFIG=${EQD}boost/config/platform/${TARGET_OS}.hpp${EQD}'${SQD}"
 
-# bzip2 and zip are disabled because... they're broken - the compilation simply
-# isn't working with bjam.  I guess they will fix it, but who needs it?  This
-# only affects the (new in 33) iostream library.
-BJAM_TOOLS   = "-sTOOLS=gcc \
+BJAM_TOOLS   = "--ignore-site-config \
+		'-sTOOLS=gcc' \
 		'-sGCC=${CC} '${BJAM_CONF} \
 		'-sGXX=${CXX} '${BJAM_CONF} \
 		'-sGCC_INCLUDE_DIRECTORY=${STAGING_INCDIR}' \
 		'-sGCC_STDLIB_DIRECTORY=${STAGING_LIBDIR}' \
-		'-sNO_BZIP2=1' \
-		'-sNO_ZLIB=1' \
 		'-sBUILD=release <optimization>space <threading>multi <inlining>on <debug-symbols>off' \
-		'-sPYTHON_VERSION=${PYTHON_VERSION}' \
 		'-sPYTHON_ROOT=${PYTHON_ROOT}' \
 		'--layout=system' \
 		"
 
-BJAM_OPTS    = '${BJAM_TOOLS} \
-                -sBOOST_BUILD_USER_CONFIG=${S}/tools/build/v2/user-config.jam \
+# use PARALLEL_MAKE to speed up the build, but limit it by -j 64, greater paralelism causes bjam to segfault or to ignore -j
+# https://svn.boost.org/trac/boost/ticket/7634
+def get_boost_parallel_make(bb, d):
+    pm = d.getVar('PARALLEL_MAKE', True)
+    if pm:
+        # look for '-j' and throw other options (e.g. '-l') away
+        # because they might have different meaning in bjam
+        pm = pm.split()
+        while pm:
+            v = None
+            opt = pm.pop(0)
+            if opt == '-j':
+                v = pm.pop(0)
+            elif opt.startswith('-j'):
+                v = opt[2:].strip()
+            else:
+                v = None
+
+            if v:
+                v = min(64, int(v))
+                return '-j' + str(v)
+
+    return ""
+
+BOOST_PARALLEL_MAKE = "${@get_boost_parallel_make(bb, d)}"
+BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} \
+		${BJAM_TOOLS} \
+		-sBOOST_BUILD_USER_CONFIG=${S}/tools/build/example/user-config.jam \
 		--builddir=${S}/${TARGET_SYS} \
-                --disable-icu \
+		--disable-icu \
 		${BJAM_EXTRA}'
 
+# Native compilation of bzip2 isn't working
+BJAM_OPTS_append_class-native = ' -sNO_BZIP2=1'
 
 do_boostconfig() {
 	cp -f boost/config/platform/linux.hpp boost/config/platform/linux-gnueabi.hpp
 
 	# D2194:Fixing the failure of "error: duplicate initialization of gcc with the following parameters" during compilation.
-	if ! grep -qe "^using gcc : 4.3.1" ${S}/tools/build/v2/user-config.jam 
-	then
-		echo 'using gcc : 4.3.1 : ${CXX} : compileflags -DBOOST_SP_USE_PTHREADS -I${includedir} linkflags -L${libdir} ;' >> ${S}/tools/build/v2/user-config.jam
-	fi	
+	sed -i "/^using gcc : 4.3.1/d" ${S}/tools/build/example/user-config.jam
+	sed -i "/^using python : ${PYTHON_BASEVERSION}"/d ${S}/tools/build/example/user-config.jam
+	echo 'using gcc : 4.3.1 : ${CXX} : <cflags>"${CFLAGS}" <cxxflags>"${CXXFLAGS}" <linkflags>"${LDFLAGS}" ;' >> ${S}/tools/build/example/user-config.jam
+	echo "using python : ${PYTHON_BASEVERSION} : : ${STAGING_INCDIR}/python${PYTHON_BASEVERSION} ;" >> ${S}/tools/build/example/user-config.jam
+	echo "using python : 3.4 : : ${STAGING_INCDIR}/python3.4m ;" >> ${S}/tools/build/example/user-config.jam
 
-	echo "using python : ${PYTHON_VERSION} : : ${STAGING_INCDIR}/python${PYTHON_VERSION} ;" >> ${S}/tools/build/v2/user-config.jam
-
-	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
+	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc --with-python-root=${PYTHON_ROOT}
 	sed -i '/^using python/d' project-config.jam
 }
 
+do_boostconfig[dirs] = "${S}"
 addtask do_boostconfig after do_patch before do_configure
 
 do_compile() {
@@ -174,31 +189,4 @@ do_install() {
 
 }
 
-BBCLASSEXTEND = "native"
-
-do_configure_virtclass-native() {
-	:
-}
-
-do_boostconfig_virtclass-native() {
-	:
-}
-
-do_compile_virtclass-native() {
-	set -ex
-	cd ${S}/tools/build/v2/engine
-	rm -rf bin.*
-	./build.sh gcc
-}
-
-# This is too terrible - the build script doesn't give any good
-# way I can see to find out where the binaries are placed, so
-# rely on only one bin.foo directory being created.
-do_install_virtclass-native () {
-	set -ex
-	cd ${S}/tools/build/v2/engine
-	install -d ${D}${bindir}/
-	install -c -m 755 bin.*/bjam ${D}${bindir}/
-}
-
-
+BBCLASSEXTEND = "native nativesdk"
