@@ -57,3 +57,5 @@ unset OEROOT
 
 [ -z "$BUILDDIR" ] || cd "$BUILDDIR"
 
+PS1="$PS1\[\e[0;36m\]bb> \[\e[m\]"
+HISTCONTROL=ignoreboth
