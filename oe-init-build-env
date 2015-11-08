@@ -50,6 +50,7 @@ export OEROOT
 unset OEROOT
 unset BBPATH
 unset THIS_SCRIPT
+PS1="$PS1\e[0;36mbb> \e[m"
 
 # Shutdown any bitbake server if the BBSERVER variable is not set
 if [ -z "$BBSERVER" ] && [ -f bitbake.lock ] ; then
