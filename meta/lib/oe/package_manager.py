@@ -192,6 +192,39 @@ class DpkgIndexer(Indexer):
                     apt_conf.write(line + "\n")
 
     def write_index(self):
+        bb.note(self.deploy_dir)
+        reprepro_base_dir = os.path.abspath(os.path.join(self.deploy_dir, "..", "reprepro"))
+        if os.path.exists(reprepro_base_dir):
+            shutil.rmtree(reprepro_base_dir)
+        reprepro_conf_path = os.path.join(reprepro_base_dir, "conf")
+        reprepro_conf = os.path.join(reprepro_conf_path, "distributions")
+        if not os.path.exists(reprepro_conf_path):
+            os.makedirs(reprepro_conf_path)
+
+        distro_version = self.d.getVar("DISTRO_VERSION", True)
+        f = open(reprepro_conf, 'w')
+        f.write('Origin: example.com\n')
+        f.write('Label: apt repository\n')
+        f.write('Codename: ' + distro_version  + '\n')
+        f.write('Architectures: armhf\n')
+        f.write('Components: main\n')
+        f.write('Description: OE packages for ' + distro_version  + '\n')
+        if self.d.getVar("PACKAGE_FEED_SIGN", True) == "1":
+            f.write('SignWith: yes\n')
+        f.write('Pull: ' + distro_version  + '\n')
+        f.close()
+
+        for root, dirs, files in os.walk(self.deploy_dir):
+            for file in files:
+                if file.endswith(".deb") and "dbg_" not in file:
+                    debfile = os.path.join(root, file)
+                    cmd = "reprepro -b " + reprepro_base_dir + " -v includedeb " + distro_version + " " + debfile
+                    bb.note(cmd)
+                    retvalue = os.system(cmd)
+                    if retvalue != 0:
+                        bb.fatal(cmd + " failed (is reprepro installed?) " + str(retvalue))
+
+    def write_index_orig(self):
         self.apt_conf_dir = os.path.join(self.d.expand("${APTCONF_TARGET}"),
                 "apt-ftparchive")
         self.apt_conf_file = os.path.join(self.apt_conf_dir, "apt.conf")
