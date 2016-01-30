@@ -62,6 +62,7 @@ INITSCRIPT_PARAMS_udev-cache = "start 36 S ."
 
 FILES_${PN} += "${libexecdir} ${libdir}/ConsoleKit ${nonarch_base_libdir}/udev ${bindir}/udevadm"
 RRECOMMENDS_${PN} += "udev-cache"
+RDEPENDS_udev-cache += "stat"
 
 # udev-utils has been removed as a package.  Note that udev conflicts with udev-utils so that
 # udev-utils is removed from systems on upgrade.
