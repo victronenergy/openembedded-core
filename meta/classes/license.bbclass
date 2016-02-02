@@ -15,6 +15,7 @@ LICENSE_FILES_DIRECTORY ??= "${datadir}/licenses/"
 addtask populate_lic after do_patch before do_build
 do_populate_lic[dirs] = "${LICSSTATEDIR}/${PN}"
 do_populate_lic[cleandirs] = "${LICSSTATEDIR}"
+do_populate_lic[stamp-extra-info] = "${MACHINE}"
 
 python write_package_manifest() {
     # Get list of installed packages
