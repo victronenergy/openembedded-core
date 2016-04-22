@@ -120,3 +120,7 @@ do_install() {
         ln -s ${i}4 ${i}; \
     done)
 }
+
+RDEPENDS_${PN} += "\
+	nativesdk-bison \
+"
