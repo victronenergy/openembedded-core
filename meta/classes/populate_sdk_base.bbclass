@@ -164,7 +164,7 @@ sed -e "s:$DEFAULT_INSTALL_DIR:$target_sdk_dir:g" -i $env_setup_script
 # fix dynamic loader paths in all ELF SDK binaries
 native_sysroot=$(cat $env_setup_script |grep OECORE_NATIVE_SYSROOT|cut -d'=' -f2|tr -d '"')
 dl_path=$(find $native_sysroot/lib -name "ld-linux*")
-executable_files=$(find $native_sysroot -type f -perm +111)
+executable_files=$(find $native_sysroot -type f -perm /111)
 ${env_setup_script%/*}/relocate_sdk.py $target_sdk_dir $dl_path $executable_files
 if [ $? -ne 0 ]; then
 	echo "SDK could not be set up. Relocate script failed. Abort!"
