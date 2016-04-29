@@ -109,3 +109,7 @@ def features_backfill(var,d):
         return " %s" % (" ".join(addfeatures))
     else:
         return ""
+
+def cpu_count():
+    import multiprocessing
+    return multiprocessing.cpu_count()
