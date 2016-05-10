@@ -27,7 +27,8 @@ LDFLAGS_append_armv7a = "${@base_contains('DISTRO_FEATURES', 'ld-is-gold', ' -fu
 
 BINCONFIG = "${bindir}/directfb-config"
 
-inherit autotools binconfig-disabled pkgconfig
+inherit autotools pkgconfig
+# binconfig-disabled
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[jpeg2000] = "--enable-jpeg2000,--disable-jpeg2000,jasper"
