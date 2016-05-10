@@ -9,30 +9,48 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dcf3c825659e82539645da41a7908589"
 
 HOMEPAGE = "http://directfb.org"
-DEPENDS = "jpeg libpng freetype zlib tslib"
+DEPENDS = "jpeg libpng freetype zlib tslib sysfsutils"
 
-INC_PR = "r0"
-
-SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.6/DirectFB-${PV}.tar.gz \
-           file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
-           file://configurefix.patch"
+SRC_URI = "http://www.directfb.org/downloads/Core/DirectFB-1.7/DirectFB-${PV}.tar.gz \
+           file://configurefix.patch \
+           file://fusion.patch \
+           file://bashism.patch \
+           file://0001-gfx-direct-Aboid-usng-VLAs-and-printf-formats.patch \
+          "
 
 S = "${WORKDIR}/DirectFB-${PV}"
 
 LDFLAGS_append =" -lts -lm"
 
-inherit autotools binconfig pkgconfig
+# Workaround for linking issues seen with armv7a + gold
+LDFLAGS_append_armv7a = "${@base_contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
+
+BINCONFIG = "${bindir}/directfb-config"
+
+inherit autotools binconfig-disabled pkgconfig
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[jpeg2000] = "--enable-jpeg2000,--disable-jpeg2000,jasper"
+PACKAGECONFIG[drmkms] = "--enable-drmkms,--disable-drmkms,libdrm"
+PACKAGECONFIG[tiff] = "--enable-tiff,--disable-tiff,tiff"
+PACKAGECONFIG[webp] = "--enable-webp,--disable-webp,libwebp"
 
 EXTRA_OECONF = "\
   --with-gfxdrivers=none \
-  --enable-libmpeg3=no \
   --enable-freetype=yes \
-  --enable-sdl=no \
-  --enable-vnc=no \
+  --enable-zlib \
+  --disable-imlib2 \
+  --disable-mesa \
+  --disable-sdl \
+  --disable-vnc \
   --disable-x11 \
 "
 
-#PACKAGES_DYNAMIC = "directfb-inputdrivers-*"
+#Once -fno-omit-frame-pointer option of gcc is added into TARGET_CLFAGS as default
+#this will cause directfb build failure on x86 arch, so filter out it.
+TARGET_CFLAGS_remove_x86 = "-fno-omit-frame-pointer"
+
+#PACKAGES_DYNAMIC += "^directfb-inputdrivers-.*"
 #
 #python populate_packages_prepend () {
 #    inputdrivers_libdir = d.expand('${libdir}/directfb-${RV}/inputdrivers')
