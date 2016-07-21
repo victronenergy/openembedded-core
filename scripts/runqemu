@@ -27,10 +27,13 @@ usage() {
     echo "  ROOTFS - the rootfs image file or nfsroot directory to use"
     echo "  MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)"
     echo "  RAMFS - boot a ramfs-based image"
+    echo "  ISO - boot an ISO image"
+    echo "  VM - boot a vmdk image"
     echo "  Simplified QEMU command-line options can be passed with:"
     echo "    nographic - disables video console"
     echo "    serial - enables a serial console on /dev/ttyS0"
     echo "    kvm - enables KVM when running qemux86/qemux86-64 (VT-capable CPU required)"
+    echo "    publicvnc - enable a VNC server open to all hosts"
     echo "  qemuparams=\"xyz\" - specify custom parameters to QEMU"
     echo "  bootparams=\"xyz\" - specify custom kernel parameters during boot"
     echo ""
@@ -39,8 +42,10 @@ usage() {
     echo "  $MYNAME qemux86-64 core-image-sato ext3"
     echo "  $MYNAME path/to/bzImage-qemux86.bin path/to/nfsrootdir/ serial"
     echo "  $MYNAME qemux86 ramfs"
+    echo "  $MYNAME qemux86 iso"
     echo "  $MYNAME qemux86 qemuparams=\"-m 256\""
     echo "  $MYNAME qemux86 bootparams=\"psplash=false\""
+    echo "  $MYNAME path/to/<image>-<machine>.vmdk"
     exit 1
 }
 
@@ -56,11 +61,13 @@ error() {
 MACHINE=${MACHINE:=""}
 KERNEL=${KERNEL:=""}
 ROOTFS=${ROOTFS:=""}
+VM=${VM:=""}
 FSTYPE=""
 LAZY_ROOTFS=""
 SCRIPT_QEMU_OPT=""
 SCRIPT_QEMU_EXTRA_OPT=""
 SCRIPT_KERNEL_OPT=""
+SERIALSTDIO=""
 
 # Determine whether the file is a kernel or QEMU image, and set the
 # appropriate variables
@@ -84,6 +91,10 @@ process_filename() {
 		    error "conflicting FSTYPE types [$FSTYPE] and [$EXT]"
 		fi
 		;;
+	/vmdk/)
+		FSTYPE=$EXT
+		VM=$filename
+		;;
 	*)
 		error "unknown file arg [$filename]"
 		;;
@@ -96,7 +107,8 @@ KVM_ENABLED="no"
 while true; do
     arg=${1}
     case "$arg" in
-        "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemumipsel" | "qemumips64" | "qemush4"  | "qemuppc")
+        "qemux86" | "qemux86-64" | "qemuarm" | "qemumips" | "qemumipsel" | \
+        "qemumips64" | "qemush4"  | "qemuppc" | "qemumicroblaze" | "qemuzynq")
             [ -z "$MACHINE" ] && MACHINE=$arg || \
                 error "conflicting MACHINE types [$MACHINE] and [$arg]"
             ;;
@@ -124,6 +136,10 @@ while true; do
             FSTYPE=cpio.gz
             RAMFS=true
             ;;
+        "iso")
+	    FSTYPE=iso
+	    ISOFS=true
+	    ;;
         "nographic")
             SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -nographic"
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
@@ -131,6 +147,7 @@ while true; do
         "serial")
             SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -serial stdio"
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT console=ttyS0"
+            SERIALSTDIO="1"
             ;;
         "qemuparams="*)
             SCRIPT_QEMU_EXTRA_OPT="${arg##qemuparams=}"
@@ -140,7 +157,7 @@ while true; do
             serial_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-serial\)'`
             kvm_option=`expr "$SCRIPT_QEMU_EXTRA_OPT" : '.*\(-enable-kvm\)'`
             [ ! -z "$serial_option" -o ! -z "$kvm_option" ] && \
-                error "Please use simplified serial or kvm options instead"
+                echo "Please use simplified serial or kvm options instead"
             ;;
         "bootparams="*)
             SCRIPT_KERNEL_OPT="$SCRIPT_KERNEL_OPT ${arg##bootparams=}"
@@ -155,7 +172,13 @@ while true; do
             ;;
         "kvm")
             KVM_ENABLED="yes"
-            KVM_CAPABLE=`grep -q 'vmx\|smx' /proc/cpuinfo && echo 1`
+            KVM_CAPABLE=`grep -q 'vmx\|svm' /proc/cpuinfo && echo 1`
+            ;;
+        "slirp")
+            SLIRP_ENABLED="yes"
+            ;;
+        "publicvnc")
+            SCRIPT_QEMU_OPT="$SCRIPT_QEMU_OPT -vnc 0.0.0.0:0"
             ;;
         "") break ;;
         *)
@@ -192,19 +215,27 @@ elif [ ! -w /dev/net/tun ] ; then
 fi
 
 # Report errors for missing combinations of options
-if [ -z "$MACHINE" -a -z "$KERNEL" ]; then
-    error "you must specify at least a MACHINE or KERNEL argument"
+if [ -z "$MACHINE" -a -z "$KERNEL" -a -z "$VM" ]; then
+    error "you must specify at least a MACHINE, VM, or KERNEL argument"
 fi
 if [ "$FSTYPE" = "nfs" -a -z "$ROOTFS" ]; then
     error "NFS booting without an explicit ROOTFS path is not yet supported"
 fi
 
 if [ -z "$MACHINE" ]; then
-    MACHINE=`basename $KERNEL | sed 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/'`
-    if [ -z "$MACHINE" ]; then
-        error "Unable to set MACHINE from kernel filename [$KERNEL]"
+    if [ "x$FSTYPE" = "xvmdk" ]; then
+        MACHINE=`basename $VM | sed -n 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/p'`
+        if [ -z "$MACHINE" ]; then
+            error "Unable to set MACHINE from vmdk filename [$VM]"
+        fi
+        echo "Set MACHINE to [$MACHINE] based on vmdk [$VM]"
+    else
+        MACHINE=`basename $KERNEL | sed -n 's/.*\(qemux86-64\|qemux86\|qemuarm\|qemumips64\|qemumips\|qemuppc\|qemush4\).*/\1/p'`
+        if [ -z "$MACHINE" ]; then
+            error "Unable to set MACHINE from kernel filename [$KERNEL]"
+        fi
+        echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
     fi
-    echo "Set MACHINE to [$MACHINE] based on kernel [$KERNEL]"
 fi
 
 YOCTO_KVM_WIKI="https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu"
@@ -277,6 +308,12 @@ QEMUSH4_DEFAULT_FSTYPE=ext3
 
 QEMUPPC_DEFAULT_KERNEL=vmlinux-qemuppc.bin
 QEMUPPC_DEFAULT_FSTYPE=ext3
+
+QEMUMICROBLAZE_DEFAULT_KERNEL=linux.bin.ub
+QEMUMICROBLAZE_DEFAULT_FSTYPE=cpio
+
+QEMUZYNQ_DEFAULT_KERNEL=uImage
+QEMUZYNQ_DEFAULT_FSTYPE=cpio
 
 AKITA_DEFAULT_KERNEL=zImage-akita.bin
 AKITA_DEFAULT_FSTYPE=jffs2
@@ -357,7 +394,8 @@ if [ -e "$ROOTFS" -a -z "$FSTYPE" ]; then
     # Extract the filename extension
     EXT=`echo $ROOTFS | awk -F . '{ print \$NF }'`
     if [ "x$EXT" = "xext2" -o "x$EXT" = "xext3" -o \
-          "x$EXT" = "xjffs2" -o "x$EXT" = "xbtrfs" ]; then
+          "x$EXT" = "xjffs2" -o "x$EXT" = "xbtrfs" -o \
+          "x$EXT" = "xext4" ]; then
         FSTYPE=$EXT
     else
         echo "Note: Unable to determine filesystem extension for $ROOTFS"
@@ -366,7 +404,7 @@ if [ -e "$ROOTFS" -a -z "$FSTYPE" ]; then
     fi
 fi
 
-if [ -z "$KERNEL" ]; then
+if [ -z "$KERNEL" -a "x$FSTYPE" != "xvmdk" ]; then
     setup_tmpdir
     eval kernel_file=\$${machine2}_DEFAULT_KERNEL
     KERNEL=$OE_TMPDIR/deploy/images/$kernel_file
@@ -395,7 +433,7 @@ if [ "$LAZY_ROOTFS" = "true" ]; then
     ROOTFS=$OE_TMPDIR/deploy/images/$ROOTFS-$MACHINE.$FSTYPE
 fi
 
-if [ -z "$ROOTFS" ]; then
+if [ -z "$ROOTFS" -a "x$FSTYPE" != "xvmdk" ]; then
     setup_tmpdir
     T=$OE_TMPDIR/deploy/images
     eval rootfs_list=\$${machine2}_DEFAULT_ROOTFS
@@ -409,8 +447,12 @@ fi
 
 echo ""
 echo "Continuing with the following parameters:"
-echo "KERNEL: [$KERNEL]"
-echo "ROOTFS: [$ROOTFS]"
+if [ "x$FSTYPE" != "xvmdk" ]; then
+    echo "KERNEL: [$KERNEL]"
+    echo "ROOTFS: [$ROOTFS]"
+else
+    echo "VMDK:   [$VM]"
+fi
 echo "FSTYPE: [$FSTYPE]"
 
 setup_sysroot
@@ -422,3 +464,4 @@ INTERNAL_SCRIPT=`which runqemu-internal`
 fi
 
 . $INTERNAL_SCRIPT
+exit $?
