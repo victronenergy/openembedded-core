@@ -179,10 +179,6 @@ class Rootfs(object):
 
         shutil.copytree(postinst_intercepts_dir, intercepts_dir)
 
-        shutil.copy(self.d.expand("${COREBASE}/meta/files/deploydir_readme.txt"),
-                    self.deploy_dir_image +
-                    "/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt")
-
         execute_pre_post_process(self.d, pre_process_cmds)
 
         # call the package manager dependent create method
