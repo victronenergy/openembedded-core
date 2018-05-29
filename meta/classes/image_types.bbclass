@@ -91,6 +91,15 @@ oe_mkext234fs () {
 	mkfs.$fstype -F $extra_imagecmd ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.$fstype -d ${IMAGE_ROOTFS}
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	fsck.$fstype -pvfD ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.$fstype || [ $? -le 3 ]
+
+	if [ -n "${IMAGE_ROOTFS_PARTITION_SIZE}" ]; then
+		# note: the check cares about the size on the target, not the disk usage
+		part_size=$(du -s -k --apparent-size ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.$fstype | awk '{print $1}')
+		bbdebug 1 "partion size is $part_size"
+		if [ $part_size -gt ${IMAGE_ROOTFS_PARTITION_SIZE} ]; then
+			bbfatal "image size ($part_size) exceeds IMAGE_ROOTFS_PARTITION_SIZE (${IMAGE_ROOTFS_PARTITION_SIZE})"
+		fi
+	fi
 }
 
 IMAGE_CMD_ext2 = "oe_mkext234fs ext2 ${EXTRA_IMAGECMD}"
