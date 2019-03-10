@@ -34,9 +34,9 @@ npm_do_compile() {
 	npm cache clear --force
 	# Install pkg into ${S} without going to the registry
 	if [  "${NPM_INSTALL_DEV}" = "1" ]; then
-		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --no-registry install
+		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} install
 	else
-		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry install
+		npm --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production install
 	fi
 }
 
