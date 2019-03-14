@@ -21,6 +21,8 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz;name=tarball \
            file://0001-uname-report-processor-and-hardware-correctly.patch \
            file://disable-ls-output-quoting.patch \
            file://0001-local.mk-fix-cross-compiling-problem.patch \
+           file://0001-fflush-adjust-to-glibc-2.28-libio.h-removal.patch \
+           file://0002-fflush-be-more-paranoid-about-libio.h-change.patch \
           "
 
 SRC_URI[tarball.md5sum] = "502795792c212932365e077946d353ae"
