@@ -10,8 +10,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 S = "${WORKDIR}"
 
 DEPENDS = "openssl-native"
-# not a brilliant idea, since the Makefiles use HOST_EXTRACFLAGS, but at least works..
-HOST_EXTRACFLAGS = "-I${STAGING_INCDIR_NATIVE} -I${STAGING_KERNEL_DIR}/scripts/dtc/libfdt"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
 do_compile[depends] += "virtual/kernel:do_compile_kernelmodules"
@@ -22,7 +20,7 @@ do_compile[depends] += "virtual/kernel:do_compile_kernelmodules"
 do_configure() {
 	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 	make CC="${KERNEL_CC}" LD="${KERNEL_LD}" AR="${KERNEL_AR}" \
-	           -C ${STAGING_KERNEL_DIR} O=${STAGING_KERNEL_BUILDDIR} HOST_EXTRACFLAGS="${HOST_EXTRACFLAGS}" scripts
+	           -C ${STAGING_KERNEL_DIR} O=${STAGING_KERNEL_BUILDDIR} scripts
 }
 
 
