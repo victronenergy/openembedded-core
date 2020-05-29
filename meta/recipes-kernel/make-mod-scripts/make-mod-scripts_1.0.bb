@@ -9,7 +9,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}"
 
-do_configure[depends] += "virtual/kernel:do_shared_workdir openssl-native:do_populate_sysroot"
+DEPENDS = "openssl-native"
+
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 do_compile[depends] += "virtual/kernel:do_compile_kernelmodules"
 
 # Build some host tools under work-shared.  CC, LD, and AR are probably
