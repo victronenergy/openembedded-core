@@ -289,6 +289,7 @@ do_package_write_deb[vardeps] += "PKGV PKGR PKGV DESCRIPTION SECTION PRIORITY MA
 SSTATETASKS += "do_package_write_deb"
 do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[sstate-outputdirs] = "${DEPLOY_DIR_DEB}"
+do_package_write_deb[stamp-extra-info] = "${DISTRO}"
 
 python do_package_write_deb_setscene () {
     tmpdir = d.getVar('TMPDIR')
