@@ -207,7 +207,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz"
 
 SRC_URI[sha256sum] = "5938ee717b2023b48f6bfcf344b40ddc947e3e22c0bc36d4c3418f90fea68182"
 
-inherit allarch
+# annoying, but the rpi's are making a mess of it at the moment.
+#inherit allarch
 
 CLEANBROKEN = "1"
 
