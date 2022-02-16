@@ -207,7 +207,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz"
 
 SRC_URI[sha256sum] = "e2e46fa618414952bbf2f6920cd3abcddbef45bfb7d1352994b4bfc35394d177"
 
-inherit allarch
+#inherit allarch
 
 CLEANBROKEN = "1"
 
