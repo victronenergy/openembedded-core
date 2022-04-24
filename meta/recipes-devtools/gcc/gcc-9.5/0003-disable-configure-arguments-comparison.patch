@@ -1,0 +1,33 @@
+From fbb24532266605fdc8ceaf21a680b86e2a44973a Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Sun, 24 Apr 2022 20:43:17 +0200
+Subject: [PATCH 3/3] disable configure arguments comparison
+
+These will differ for a native versus cross-compiler.
+---
+ gcc/plugin.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/gcc/plugin.c b/gcc/plugin.c
+index 2896c6a93..98c901961 100644
+--- a/gcc/plugin.c
++++ b/gcc/plugin.c
+@@ -977,9 +977,15 @@ plugin_default_version_check (struct plugin_gcc_version *gcc_version,
+     return false;
+   if (strcmp (gcc_version->revision, plugin_version->revision))
+     return false;
++
++#if 0
++  /* In case of a cross compiler, this compares the cross config with the native
++     config, which will always fail, at least for OE. Disable it. */
+   if (strcmp (gcc_version->configuration_arguments,
+ 	      plugin_version->configuration_arguments))
+     return false;
++#endif
++
+   return true;
+ }
+ 
+-- 
+2.25.1
+
