@@ -74,6 +74,9 @@ SRC_URI = "\
            file://0002-aarch64-Introduce-SLS-mitigation-for-RET-and-BR-inst.patch \
            file://0003-aarch64-Mitigate-SLS-for-BLR-instruction.patch \
            file://0001-Backport-fix-for-PR-tree-optimization-97236-fix-bad-.patch \
+           file://0001-guess-rdynamic-is-needed-for-a-canadian-build-with-a.patch \
+           file://0002-rdynamic-autoconf-i-f.patch \
+           file://0003-disable-configure-arguments-comparison.patch \
 "
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 SRC_URI[sha256sum] = "71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1"

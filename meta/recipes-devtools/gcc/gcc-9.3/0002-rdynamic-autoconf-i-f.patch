@@ -1,0 +1,36 @@
+From 3e89d8ea4ec0d1dcbc646b75466c815368d7e792 Mon Sep 17 00:00:00 2001
+From: Jeroen Hofstee <jhofstee@victronenergy.com>
+Date: Sun, 24 Apr 2022 20:42:15 +0200
+Subject: [PATCH 2/3] rdynamic: autoconf -i -f
+
+---
+ gcc/configure | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/gcc/configure b/gcc/configure
+index bb86eb091..983da5a71 100755
+--- a/gcc/configure
++++ b/gcc/configure
+@@ -29975,8 +29975,18 @@ $as_echo_n "checking for -rdynamic... " >&6; }
+ $as_echo "$plugin_rdynamic" >&6; }
+        fi
+      else
+-       { $as_echo "$as_me:${as_lineno-$LINENO}: result: unable to check" >&5
++       case "${host}" in
++         *-*-linux*)
++           { $as_echo "$as_me:${as_lineno-$LINENO}: result: unable to check, guessing -rdynamic is needed" >&5
++$as_echo "unable to check, guessing -rdynamic is needed" >&6; }
++           plugin_rdynamic=yes
++           pluginlibs="-rdynamic"
++         ;;
++         *)
++           { $as_echo "$as_me:${as_lineno-$LINENO}: result: unable to check" >&5
+ $as_echo "unable to check" >&6; }
++         ;;
++       esac
+      fi
+ 
+      # Check -ldl
+-- 
+2.25.1
+
