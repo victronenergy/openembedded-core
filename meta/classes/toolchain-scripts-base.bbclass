@@ -8,4 +8,4 @@ toolchain_create_sdk_version () {
 	echo 'Metadata Revision: ${METADATA_REVISION}' >> $versionfile
 	echo 'Timestamp: ${DATETIME}' >> $versionfile
 }
-toolchain_create_sdk_version[vardepsexclude] = "DATETIME"
+toolchain_create_sdk_version[vardepsexclude] = "DATETIME METADATA_REVISION"
