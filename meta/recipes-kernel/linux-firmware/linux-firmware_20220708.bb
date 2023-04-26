@@ -212,7 +212,7 @@ SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 SRC_URI[sha256sum] = "0abec827a035c82bdcabdf82aa37ded247bc682ef05861bd409ea6f477bab81d"
 
 # annoying, but the rpi's are making a mess of it at the moment.
-#inherit allarch
+inherit allarch
 
 CLEANBROKEN = "1"
 
