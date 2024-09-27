@@ -1653,7 +1653,7 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/rpmdeps --alldeps --define '__font_provides %{nil}'"
+RPMDEPS = "${STAGING_LIBDIR_NATIVE}/rpm/rpmdeps --alldeps --define '__font_provides %{nil}' --define '_fileattrsdir ${STAGING_LIBDIR_NATIVE}/rpm/fileattrs'"
 
 # Collect perfile run-time dependency metadata
 # Output:
