@@ -1593,6 +1593,14 @@ python () {
     if prog.search(pn):
         oe.qa.handle_error("uppercase-pn", 'PN: %s is upper case, this can result in unexpected behavior.' % pn, d)
 
+    # backported, to be compatible with newer OE versions
+    file = d.getVar('FILE')
+    if "meta-victronenergy" in file or "meta-swupdate" in file:
+        sourcedir = d.getVar("S")
+        workdir = d.getVar("WORKDIR")
+        if sourcedir == workdir:
+            bb.warn("Using S = ${WORKDIR} is no longer supported: " + file)
+
     # Some people mistakenly use DEPENDS:${PN} instead of DEPENDS and wonder
     # why it doesn't work.
     if (d.getVar(d.expand('DEPENDS:${PN}'))):
