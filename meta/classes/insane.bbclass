@@ -976,6 +976,13 @@ def package_qa_check_src_uri(pn, d, messages):
     if "${PN}" in d.getVar("SRC_URI", False):
         package_qa_handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
 
+    file = d.getVar('FILE')
+    if "meta-victronenergy" in file or "meta-swupdate" in file:
+        sources = d.getVar("SRC_URI").split()
+        for source in sources:
+            if (source.startswith("git://") or source.startswith("gitsm://")) and not ";branch=" in source:
+                package_qa_handle_error("src-uri-bad", "%s: URL: %s does not set any branch parameter" % (pn, source), d)
+
 QARECIPETEST[unhandled-features-check] = "package_qa_check_unhandled_features_check"
 def package_qa_check_unhandled_features_check(pn, d, messages):
     if not bb.data.inherits_class('features_check', d):
