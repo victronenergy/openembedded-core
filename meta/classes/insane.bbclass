@@ -983,6 +983,9 @@ def package_qa_check_src_uri(pn, d, messages):
             if (source.startswith("git://") or source.startswith("gitsm://")) and not ";branch=" in source:
                 package_qa_handle_error("src-uri-bad", "%s: URL: %s does not set any branch parameter" % (pn, source), d)
 
+            if (source.startswith("git://github.com/") or source.startswith("gitsm://github.com/")) and not ";protocol=" in source:
+                package_qa_handle_error("src-uri-bad", "%s: URL: %s does not set a protocol for github, use e.g. protocol=https or protocol=ssh" % (pn, source), d)
+
 QARECIPETEST[unhandled-features-check] = "package_qa_check_unhandled_features_check"
 def package_qa_check_unhandled_features_check(pn, d, messages):
     if not bb.data.inherits_class('features_check', d):
