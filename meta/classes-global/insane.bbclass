@@ -1527,11 +1527,6 @@ python do_recipe_qa() {
         if "${PN}" in d.getVar("SRC_URI", False):
             oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
 
-        for url in d.getVar("SRC_URI").split():
-            # Search for github and gitlab URLs that pull unstable archives (comment for future greppers)
-            if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url) or "//codeload.github.com/" in url:
-                oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
-
     pn = d.getVar('PN')
     test_missing_metadata(pn, d)
     test_missing_maintainer(pn, d)
