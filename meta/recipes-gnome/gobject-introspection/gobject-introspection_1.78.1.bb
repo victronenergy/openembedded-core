@@ -40,6 +40,8 @@ export B
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[doctool] = "-Ddoctool=enabled,-Ddoctool=disabled,python3-mako,"
 
+PACKAGE_BEFORE_PN = "${PN}-bin"
+
 # Configure target build to use native tools of itself and to use a qemu wrapper
 # and optionally to generate introspection data
 EXTRA_OEMESON:class-target = " \
@@ -188,7 +190,13 @@ FILES:${PN}-dev:append = " ${datadir}/gobject-introspection-1.0/tests/*.c \
 FILES:${PN}-dbg += "${libdir}/gobject-introspection/giscanner/.debug/"
 FILES:${PN}-staticdev += "${libdir}/gobject-introspection/giscanner/*.a"
 
+FILES:${PN}-bin = "${bindir} ${libdir}/gobject-introspection/giscanner"
+
 # setuptools can be removed when upstream removes all uses of distutils
-RDEPENDS:${PN} = "python3-pickle python3-xml python3-setuptools"
+RDEPENDS:${PN}-bin = "python3-pickle python3-xml python3-setuptools"
+
+# This is required for the scanner to run natively, since the class native
+# isn't able to map the ${PN}-bin to ${PN}-native automatically.
+RDEPENDS:${PN}:append:class-native = " python3-setuptools-native"
 
 BBCLASSEXTEND = "native"
