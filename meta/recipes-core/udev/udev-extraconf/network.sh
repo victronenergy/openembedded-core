@@ -37,14 +37,14 @@ fi
 # if this interface has an entry in /etc/network/interfaces, let ifupdown
 # handle it
 if grep -q "iface \+$INTERFACE" /etc/network/interfaces; then
-  case $ACTION in
-    add)
-    	ifconfig | grep -q "^$INTERFACE" || ifup $INTERFACE
-    	;;
-    remove)
-    	ifdown $INTERFACE
-    	;;
-  esac
+    case $ACTION in
+        add)
+            ifconfig | grep -q "^$INTERFACE" || ifup $INTERFACE
+            ;;
+        remove)
+            ifdown $INTERFACE
+            ;;
+    esac
   
-  exit 0
+    exit 0
 fi
