@@ -19,8 +19,9 @@ SRCBRANCH ?= "binutils-2_42-branch"
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
 CVE_STATUS[CVE-2023-25584] = "cpe-incorrect: Applies only for version 2.40 and earlier"
+CVE_STATUS[CVE-2025-1180] = "patched: fixed by patch for CVE-2025-1176" 
 
-SRCREV ?= "6558f9f5f0ccc107a083ae7fbf106ebcb5efa817"
+SRCREV ?= "f9488b0d92b591bdf3ff8cce485cb0e1b3727cc0"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -38,6 +39,10 @@ SRC_URI = "\
      file://0015-gprofng-change-use-of-bignum-to-bigint.patch \
      file://0016-CVE-2024-53589.patch \
      file://0017-dlltool-file-name-too-long.patch \
+     file://0018-opcodes-fix-std-gnu23-compatibility-wrt-static_assert.patch \
+     file://0019-Fix-32097-Warnings-when-building-gprofng-with-Clang.patch \
+     file://0020-gprofng-fix-std-gnu23-compatibility-wrt-unprototyped.patch \
+     file://0021-gprofng-fix-build-with-std-gnu23.patch \
      file://0018-CVE-2025-0840.patch \
      file://CVE-2025-1176.patch \
      file://CVE-2025-1178.patch \
@@ -45,5 +50,21 @@ SRC_URI = "\
      file://CVE-2025-1181-pre.patch \
      file://CVE-2025-1181.patch \
      file://CVE-2025-1182.patch \
+     file://0019-CVE-2025-1153-1.patch \
+     file://0020-CVE-2025-1153-2.patch \
+     file://0021-CVE-2025-1153-3.patch \
+     file://CVE-2025-1179-pre.patch \
+     file://CVE-2025-1179.patch \
+     file://0022-CVE-2025-5245.patch \
+     file://0022-CVE-2025-5244.patch \
+     file://0023-CVE-2025-7546.patch \
+     file://0023-CVE-2025-7545.patch \
+     file://0024-CVE-2025-11082.patch \
+     file://0025-CVE-2025-11083.patch \
+     file://0026-CVE-2025-11081.patch \
+     file://0027-CVE-2025-8225.patch \
+     file://CVE-2025-11414.patch \
+     file://CVE-2025-11412.patch \
+     file://CVE-2025-11413.patch \
 "
 S  = "${WORKDIR}/git"

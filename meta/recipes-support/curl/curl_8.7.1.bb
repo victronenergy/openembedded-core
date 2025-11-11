@@ -24,6 +24,7 @@ SRC_URI = " \
     file://CVE-2024-11053-0002.patch \
     file://CVE-2024-11053-0003.patch \
     file://CVE-2025-0167.patch \
+    file://CVE-2025-9086.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
@@ -37,6 +38,8 @@ CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl dan
 CVE_STATUS[CVE-2024-32928] = "ignored: CURLOPT_SSL_VERIFYPEER was disabled on google cloud services causing a potential man in the middle attack"
 
 CVE_STATUS[CVE-2025-0725] = "not-applicable-config: gzip decompression of content-encoded HTTP responses with the `CURLOPT_ACCEPT_ENCODING` option, using zlib 1.2.0.3 or older"
+CVE_STATUS[CVE-2025-5025] = "${@bb.utils.contains('PACKAGECONFIG', 'openssl', 'not-applicable-config: applicable only with wolfssl','unpatched',d)}"
+
 
 inherit autotools pkgconfig binconfig multilib_header ptest
 
@@ -91,10 +94,12 @@ PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 EXTRA_OECONF = " \
     --disable-libcurl-option \
     --disable-ntlm-wb \
-    --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
     --without-libpsl \
     --enable-optimize \
     ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl', d) == '') else ''} \
+"
+EXTRA_OECONF:append:class-target = " \
+    --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
 "
 
 fix_absolute_paths () {
