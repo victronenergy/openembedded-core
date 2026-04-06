@@ -2597,7 +2597,17 @@ class DevtoolIdeSdkTests(DevtoolBase):
             'IMAGE_GEN_DEBUGFS = "1"',
             'IMAGE_INSTALL:append = " gdbserver %s"' % ' '.join(
                 [r + '-ptest' for r in recipe_names]),
-            'DISTRO_FEATURES:append = " ptest"'
+            'DISTRO_FEATURES:append = " ptest"',
+            # Static UIDs/GIDs are required so that files installed via
+            # "install -o ${BPN}" in do_install embed the same UID that gets
+            # assigned in the final image. Without this, each recipe's isolated
+            # sysroot allocates UIDs independently (both start at the first free
+            # system UID), so files end up with colliding UIDs in the image.
+            # devtool deploy-target is a raw file copy and does not run
+            # pkg_postinst, so ownership must be correct already in ${D}.
+            'USERADDEXTENSION = "useradd-staticids"',
+            'USERADD_UID_TABLES += "files/static-passwd"',
+            'USERADD_GID_TABLES += "files/static-group"',
         ]
         self.write_config("\n".join(conf_lines))
 
@@ -2982,7 +2992,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self.assertEqual(self._workspace_scripts_dir(
                 recipe_name), self._sources_scripts_dir(tempdir))
 
-            # Verify /etc/meson-example.conf is still owned by the cmake-example user
+            # Verify /etc/cmake-example.conf is still owned by the cmake-example user
             # after the install and deploy scripts updated the file
             self._verify_conf_file(qemu, conf_file, example_exe, example_exe)
 
