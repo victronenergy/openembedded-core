@@ -2911,7 +2911,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         result = runCmd('%s test -C %s' % (meson_exe, build_dir),
                         cwd=tempdir, output_log=self._cmd_logger)
         self.assertEqual(result.status, 0)
-        self.assertIn("Fail:              0", result.output)
+        self.assertRegex(result.output, r"Fail:\s+0")
 
         # Verify re-building and testing works again
         result = runCmd('%s compile -C %s --clean' % (meson_exe, build_dir),
@@ -2922,7 +2922,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         result = runCmd('%s test -C %s' % (meson_exe, build_dir),
                         cwd=tempdir, output_log=self._cmd_logger)
         self.assertEqual(result.status, 0)
-        self.assertIn("Fail:              0", result.output)
+        self.assertRegex(result.output, r"Fail:\s+0")
 
         return compile_cmd
 
