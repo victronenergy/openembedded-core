@@ -22,7 +22,7 @@ SRC_URI[sha256sum] = "2924bcb3a1ed8b551fc101f740b9f0fe0a202b115027647cf69850d65f
 # Doesn't use automake
 inherit autotools-brokensep
 
-PACKAGECONFIG ??= "acl attr \
+PACKAGECONFIG ??= "acl attr system-zlib \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
 
@@ -33,6 +33,7 @@ PACKAGECONFIG[lz4] = "--enable-lz4,--disable-lz4,lz4"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[xxhash] = "--enable-xxhash,--disable-xxhash,xxhash"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
+PACKAGECONFIG[system-zlib] = "--with-included-zlib=no,--with-included-zlib=yes,zlib"
 
 # By default, if crosscompiling, rsync disables a number of
 # capabilities, hardlinking symlinks and special files (i.e. devices)
