@@ -227,6 +227,9 @@ def cpe_escape(value):
     if not value:
         return value
 
+    # Do not break compatibility
+    value = value.replace("\\+", "+")
+
     return value.translate(_CPE23_ENCODE_TRANS_TABLE)
 
 
