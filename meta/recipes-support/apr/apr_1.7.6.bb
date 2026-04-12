@@ -87,6 +87,8 @@ do_configure:append() {
 do_install:append() {
 	oe_multilib_header apr.h
 	install -d ${D}${datadir}/apr
+	# avoid reproducibility issue, -std=gnu23 is used only on hosts with gcc-14 and newer
+	sed -i '/^CC_FOR_BUILD=/s/-std=gnu23//g' ${D}${datadir}/build-1/apr_rules.mk
 }
 
 do_install:append:class-target() {
