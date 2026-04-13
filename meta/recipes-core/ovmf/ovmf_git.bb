@@ -47,6 +47,7 @@ CVE_STATUS[CVE-2019-14563] = "fixed-version: The CPE in the NVD database doesn't
 CVE_STATUS[CVE-2019-14575] = "fixed-version: The CPE in the NVD database doesn't reflect correctly the vulnerable versions."
 CVE_STATUS[CVE-2019-14586] = "fixed-version: The CPE in the NVD database doesn't reflect correctly the vulnerable versions."
 CVE_STATUS[CVE-2019-14587] = "fixed-version: The CPE in the NVD database doesn't reflect correctly the vulnerable versions."
+CVE_STATUS[CVE-2024-1298] = "fixed-version: fixed since edk2-stable202405"
 
 inherit deploy
 
