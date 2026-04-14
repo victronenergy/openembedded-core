@@ -51,6 +51,7 @@ do_install_ptest() {
 	install -m 644 ${B}/src/config.h ${D}${PTEST_PATH}/src/
 	sed -e 's/^srcdir = .*/srcdir = ..\/..\/ptest\/tests/' \
 	    -e "/^TEST_LOG_DRIVER =/s|(top_srcdir)|(top_builddir)|" \
+	    -e '/^CC_FOR_BUILD/s/\s-std=gnu23//g' \
 	    -i ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
