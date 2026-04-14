@@ -1,0 +1,32 @@
+#!/bin/sh
+
+PTEST_DIR=/usr/lib/go/ptest
+GOROOT=/usr/lib/go
+
+export GOROOT
+export PATH=$GOROOT/bin:$PATH
+export ZONEINFO=/usr/share/zoneinfo
+
+ln -sf $PTEST_DIR/src $GOROOT/src
+mkdir -p $GOROOT/pkg/include
+cp $PTEST_DIR/pkg/include/* $GOROOT/pkg/include/
+cp $PTEST_DIR/VERSION $GOROOT/VERSION
+
+cd $GOROOT
+
+SKIP_PKGS="debug/dwarf debug/elf debug/pe debug/plan9obj go/types internal/xcoff net/http runtime testing time"
+
+SKIP_REGEX=$(echo "$SKIP_PKGS" | sed 's/ /|/g')
+
+for pkg in $(go list std); do
+    if echo "$pkg" | grep -qE "^($SKIP_REGEX)$"; then
+        echo "SKIP: $pkg"
+        continue
+    fi
+
+    if go test -short "$pkg" >/dev/null 2>&1; then
+        echo "PASS: $pkg"
+    else
+        echo "FAIL: $pkg"
+    fi
+done
