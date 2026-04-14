@@ -59,6 +59,11 @@ CFLAGS:append:toolchain-clang = " -fno-strict-aliasing"
 # Needed with -march=x86-64-v3
 CFLAGS:append:toolchain-gcc:class-target:x86-64 = " -fno-builtin-memcpy -D__NO_STRING_INLINES -U_FORTIFY_SOURCE"
 
+# Link Compress-Raw-Zlib to the system zlib instead of a vendored copy
+EXTRA_OEMAKE += "BUILD_ZLIB=False ZLIB_INCLUDE=${STAGING_INCDIR} ZLIB_LIB=${STAGING_LIBDIR}"
+
+CVE_STATUS[CVE-2026-4176] = "not-applicable-config: we do not use the vendorered zlib"
+
 do_configure:prepend() {
     rm -rf ${B}
     cp -rfp ${S} ${B}
