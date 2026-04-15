@@ -27,6 +27,7 @@ CVE_STATUS[CVE-2019-14865] = "not-applicable-platform: applies only to RHEL"
 CVE_STATUS[CVE-2023-4001]  = "not-applicable-platform: Applies only to RHEL/Fedora"
 CVE_STATUS[CVE-2024-1048]  = "not-applicable-platform: Applies only to RHEL/Fedora"
 CVE_STATUS[CVE-2024-2312]  = "not-applicable-platform: Applies only to Ubuntu"
+CVE_STATUS[CVE-2024-49504] = "not-applicable-platform: Applies only to SUSE"
 
 DEPENDS = "flex-native bison-native gettext-native gawk-replacement-native"
 
