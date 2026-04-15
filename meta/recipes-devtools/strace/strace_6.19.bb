@@ -22,6 +22,10 @@ SRC_URI:append:libc-musl = "\
            "
 SRC_URI[sha256sum] = "e076c851eec0972486ec842164fdc54547f9d17abd3d1449de8b120f5d299143"
 
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"
+
 inherit autotools github-releases ptest
 
 # Not yet ported to rv32
