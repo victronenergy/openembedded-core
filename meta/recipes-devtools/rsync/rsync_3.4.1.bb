@@ -8,7 +8,7 @@ SECTION = "console/network"
 LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=24423708fe159c9d12be1ea29fcb18c7"
 
-DEPENDS = "popt"
+DEPENDS = "popt zlib"
 
 SRC_URI = "https://download.samba.org/pub/${BPN}/src/${BP}.tar.gz \
            file://rsyncd.conf \
@@ -22,7 +22,7 @@ SRC_URI[sha256sum] = "2924bcb3a1ed8b551fc101f740b9f0fe0a202b115027647cf69850d65f
 # Doesn't use automake
 inherit autotools-brokensep
 
-PACKAGECONFIG ??= "acl attr system-zlib \
+PACKAGECONFIG ??= "acl attr \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
 
@@ -33,14 +33,13 @@ PACKAGECONFIG[lz4] = "--enable-lz4,--disable-lz4,lz4"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[xxhash] = "--enable-xxhash,--disable-xxhash,xxhash"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
-PACKAGECONFIG[system-zlib] = "--with-included-zlib=no,--with-included-zlib=yes,zlib"
 
 # By default, if crosscompiling, rsync disables a number of
 # capabilities, hardlinking symlinks and special files (i.e. devices)
 CACHED_CONFIGUREVARS += "rsync_cv_can_hardlink_special=yes rsync_cv_can_hardlink_symlink=yes"
 
 EXTRA_OEMAKE = 'STRIP=""'
-EXTRA_OECONF = "--disable-md2man --with-nobody-group=nogroup"
+EXTRA_OECONF = "--disable-md2man --with-nobody-group=nogroup --without-included-zlib"
 
 #| ./simd-checksum-x86_64.cpp: In function 'uint32_t get_checksum1_cpp(char*, int32_t)':
 #| ./simd-checksum-x86_64.cpp:89:52: error: multiversioning needs 'ifunc' which is not supported on this target
