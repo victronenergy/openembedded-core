@@ -19,7 +19,8 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/src/${BP}.tar.gz \
            "
 SRC_URI[sha256sum] = "2924bcb3a1ed8b551fc101f740b9f0fe0a202b115027647cf69850d65fd88c52"
 
-# Doesn't use automake
+# Out-of-tree builds don't install the documentation currently
+# https://github.com/RsyncProject/rsync/issues/846
 inherit autotools-brokensep
 
 PACKAGECONFIG ??= "acl attr \
