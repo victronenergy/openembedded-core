@@ -279,7 +279,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
     def is_native(self):
         for e in self.doc.extension:
-            if not isinstance(e, oe.sbom30.OEDocumentExtension):
+            if not isinstance(e, OEDocumentExtension):
                 continue
 
             if e.is_native is not None:
@@ -289,14 +289,14 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
     def set_is_native(self, is_native):
         for e in self.doc.extension:
-            if not isinstance(e, oe.sbom30.OEDocumentExtension):
+            if not isinstance(e, OEDocumentExtension):
                 continue
 
             e.is_native = is_native
             return
 
         if is_native:
-            self.doc.extension.append(oe.sbom30.OEDocumentExtension(is_native=True))
+            self.doc.extension.append(OEDocumentExtension(is_native=True))
 
     def add_aliases(self):
         for o in self.foreach_type(oe.spdx30.Element):
@@ -633,7 +633,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         self.new_relationship(
             [spdx_file],
             oe.spdx30.RelationshipType.hasDeclaredLicense,
-            [oe.sbom30.get_element_link_id(lic_alias) for lic_alias in file_licenses],
+            [get_element_link_id(lic_alias) for lic_alias in file_licenses],
         )
         spdx_file.extension.append(OELicenseScannedExtension())
 
