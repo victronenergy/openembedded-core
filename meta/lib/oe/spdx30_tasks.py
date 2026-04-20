@@ -893,7 +893,7 @@ def create_spdx(d):
             sorted(oe.sbom30.get_element_link_id(b) for b in dep_builds),
         )
 
-    debug_source_ids = set()
+    debug_sources = set()
     source_hash_cache = {}
 
     # Write out the package SPDX data now. It is not complete as we cannot
@@ -1057,12 +1057,9 @@ def create_spdx(d):
                 )
 
             if include_sources:
-                debug_sources = get_package_sources_from_debug(
+                debug_sources |= get_package_sources_from_debug(
                     d, package, package_files, dep_sources, source_hash_cache,
                     excluded_files=excluded_files,
-                )
-                debug_source_ids |= set(
-                    oe.sbom30.get_element_link_id(d) for d in debug_sources
                 )
 
             oe.sbom30.write_recipe_jsonld_doc(
@@ -1089,12 +1086,17 @@ def create_spdx(d):
                 sorted(list(sysroot_files)),
             )
 
-    if build_inputs or debug_source_ids:
+    if build_inputs or debug_sources:
+        debug_source_ids = sorted(
+            oe.sbom30.get_element_link_id(d)
+            for d in debug_sources.difference(build_inputs)
+        )
+
         build_objset.new_scoped_relationship(
             [build],
             oe.spdx30.RelationshipType.hasInput,
             oe.spdx30.LifecycleScopeType.build,
-            sorted(list(build_inputs)) + sorted(list(debug_source_ids)),
+            sorted(build_inputs) + debug_source_ids,
         )
 
     if d.getVar("SPDX_INCLUDE_PACKAGECONFIG", True) != "0":
