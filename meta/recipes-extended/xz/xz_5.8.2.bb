@@ -72,3 +72,7 @@ do_install_ptest () {
     ln -s ${bindir}/xzdiff ${D}${PTEST_PATH}/src/scripts/xzdiff
     ln -s ${bindir}/xzgrep ${D}${PTEST_PATH}/src/scripts/xzgrep
 }
+
+CVE_STATUS[CVE-2024-47611] = "fixed-version: fixed in 5.6.3 and Windows-specific"
+CVE_STATUS[CVE-2025-31115] = "fixed-version: fixed in 5.8.1"
+CVE_STATUS[CVE-2025-58058] = "cpe-incorrect: this is specific to the Go xz module"
