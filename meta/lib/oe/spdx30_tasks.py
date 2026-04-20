@@ -264,10 +264,9 @@ def get_package_sources_from_debug(
 
     pkg_data = oe.packagedata.read_subpkgdata_extended(package, d)
 
-    if pkg_data is None:
-        return
-
     dep_source_files = set()
+    if pkg_data is None:
+        return dep_source_files
 
     for file_path, file_data in pkg_data["files_info"].items():
         if not "debugsrc" in file_data:
