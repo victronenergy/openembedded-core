@@ -605,7 +605,6 @@ def get_is_native(d):
 
 def create_recipe_spdx(d):
     deploydir = Path(d.getVar("SPDXRECIPEDEPLOY"))
-    deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     pn = d.getVar("PN")
 
     license_data = oe.spdx_common.load_spdx_license_data(d)
@@ -816,10 +815,8 @@ def create_spdx(d):
 
     pn = d.getVar("PN")
     deploydir = Path(d.getVar("SPDXDEPLOY"))
-    deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     spdx_workdir = Path(d.getVar("SPDXWORK"))
     include_sources = d.getVar("SPDX_INCLUDE_SOURCES") == "1"
-    pkg_arch = d.getVar("SSTATE_PKGARCH")
     is_native = get_is_native(d)
 
     recipe, recipe_objset = load_recipe_spdx(d)
@@ -1122,7 +1119,6 @@ def create_spdx(d):
 
 
 def create_package_spdx(d):
-    deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     deploydir = Path(d.getVar("SPDXRUNTIMEDEPLOY"))
 
     direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
@@ -1143,7 +1139,6 @@ def create_package_spdx(d):
         d, "%s-package-common" % d.getVar("PN")
     )
 
-    pkgdest = Path(d.getVar("PKGDEST"))
     for package in d.getVar("PACKAGES").split():
         localdata = bb.data.createCopy(d)
         pkg_name = d.getVar("PKG:%s" % package) or package
@@ -1341,7 +1336,6 @@ def collect_build_package_inputs(d, objset, build, packages, files_by_hash=None)
 
 
 def create_rootfs_spdx(d):
-    deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     deploydir = Path(d.getVar("SPDXROOTFSDEPLOY"))
     root_packages_file = Path(d.getVar("SPDX_ROOTFS_PACKAGES"))
     image_basename = d.getVar("IMAGE_BASENAME")
