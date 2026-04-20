@@ -704,7 +704,8 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         )
         return self.add(v)
 
-    def new_vex_patched_relationship(self, from_, to):
+    def new_vex_patched_relationship(self, from_, to, notes: None):
+        props = {'security_statusNotes': notes} if notes else {}
         return self._new_relationship(
             oe.spdx30.security_VexFixedVulnAssessmentRelationship,
             from_,
@@ -712,9 +713,11 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             to,
             spdxid_name="vex-fixed",
             security_vexVersion=VEX_VERSION,
+            **props,
         )
 
-    def new_vex_unpatched_relationship(self, from_, to):
+    def new_vex_unpatched_relationship(self, from_, to, notes: None):
+        props = {'security_statusNotes': notes} if notes else {}
         return self._new_relationship(
             oe.spdx30.security_VexAffectedVulnAssessmentRelationship,
             from_,
@@ -723,9 +726,11 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             spdxid_name="vex-affected",
             security_vexVersion=VEX_VERSION,
             security_actionStatement="Mitigation action unknown",
+            **props,
         )
 
-    def new_vex_ignored_relationship(self, from_, to, *, impact_statement):
+    def new_vex_ignored_relationship(self, from_, to, *, impact_statement, notes: None):
+        props = {'security_statusNotes': notes} if notes else {}
         return self._new_relationship(
             oe.spdx30.security_VexNotAffectedVulnAssessmentRelationship,
             from_,
@@ -734,6 +739,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             spdxid_name="vex-not-affected",
             security_vexVersion=VEX_VERSION,
             security_impactStatement=impact_statement,
+            **props,
         )
 
     def import_bitbake_build_objset(self):

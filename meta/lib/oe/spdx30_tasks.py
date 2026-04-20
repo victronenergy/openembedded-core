@@ -724,7 +724,8 @@ def create_recipe_spdx(d):
 
             if status == "Patched":
                 spdx_vex = recipe_objset.new_vex_patched_relationship(
-                    [spdx_cve_id], [recipe]
+                    [spdx_cve_id], [recipe],
+                    notes=": ".join(v for v in (detail, description) if v)
                 )
                 patches = []
                 for idx, filepath in enumerate(resources):
@@ -749,12 +750,16 @@ def create_recipe_spdx(d):
                     )
 
             elif status == "Unpatched":
-                recipe_objset.new_vex_unpatched_relationship([spdx_cve_id], [recipe])
+                recipe_objset.new_vex_unpatched_relationship(
+                    [spdx_cve_id], [recipe],
+                    notes=": ".join(v for v in (detail, description) if v)
+                )
             elif status == "Ignored":
                 spdx_vex = recipe_objset.new_vex_ignored_relationship(
                     [spdx_cve_id],
                     [recipe],
                     impact_statement=description,
+                    notes=detail,
                 )
 
                 vex_just_type = d.getVarFlag("CVE_CHECK_VEX_JUSTIFICATION", detail)
