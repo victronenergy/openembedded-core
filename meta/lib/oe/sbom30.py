@@ -760,6 +760,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         bb_objset = self.import_bitbake_build_objset()
         build = find_bitbake_build(bb_objset)
         if build is None:
+            deploy_dir_spdx = self.d.getVar("DEPLOY_DIR_SPDX")
             bb.fatal(f"No build found in {deploy_dir_spdx}")
 
         return build
