@@ -39,7 +39,6 @@ def add_license_expression(
 ):
     simple_license_text = {}
     license_text_map = {}
-    license_ref_idx = 0
 
     def add_license_text(name):
         nonlocal objset
@@ -96,7 +95,6 @@ def add_license_expression(
 
     def convert(l):
         nonlocal license_text_map
-        nonlocal license_ref_idx
 
         if l == "(" or l == ")":
             return l
