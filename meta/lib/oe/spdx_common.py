@@ -15,7 +15,7 @@ from pathlib import Path
 from dataclasses import dataclass
 
 LIC_REGEX = re.compile(
-    rb"^\W*SPDX-License-Identifier:\s*([ \w\d.()+-]+?)(?:\s+\W*)?$",
+    rb"^\W*SPDX-License-Identifier:\s*([ \w.()+-]+?)(?:\s+\W*)?$",
     re.MULTILINE,
 )
 
