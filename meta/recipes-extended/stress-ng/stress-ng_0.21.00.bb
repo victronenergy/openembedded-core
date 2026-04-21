@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master;tag=V${PV}"
-SRCREV = "00559dcb1bae3ef12295a1420683094a7d1389e0"
+SRCREV = "19d2eea10269bac3d721701728b7bf79950b7f1a"
 
 DEPENDS = "coreutils-native libbsd"
 
