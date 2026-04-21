@@ -20,7 +20,7 @@ GNOMEBASEBUILDCLASS = "autotools"
 
 inherit gnomebase upstream-version-is-even
 
-SRC_URI[archive.sha256sum] = "f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382"
+SRC_URI[archive.sha256sum] = "5ad7cbbfcc0de61b403d6797c9ef60455bfbebd8e162aec33b5b0b097adfb9d5"
 
 SHRT_VER = "${@gnome_verdir("${PV}")}"
 
