@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c84cac88e46fc07647ea07e6c24eeb7c \
 
 inherit gnomebase allarch gtk-icon-cache
 
-SRC_URI[archive.sha256sum] = "65166461d1b278aa942f59aa8d0fccf1108d71c65f372c6266e172449791755c"
+SRC_URI[archive.sha256sum] = "fac6e0401fca714780561a081b8f7e27c3bc1db34ebda4da175081f26b24d460"
 
 DEPENDS += "librsvg-native"
 
