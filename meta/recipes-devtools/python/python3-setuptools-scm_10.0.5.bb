@@ -6,13 +6,16 @@ argument or in a SCM managed file."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 
-SRC_URI[sha256sum] = "1c674ab4665686a0887d7e24c03ab25f24201c213e82ea689d2f3e169ef7ef57"
+SRC_URI[sha256sum] = "bbba8fe754516cdefd017f4456721775e6ef9662bd7887fb52ae26813d4838c3"
 
 PYPI_PACKAGE = "setuptools_scm"
 
 inherit pypi python_setuptools_build_meta
 
-DEPENDS += "python3-packaging-native"
+DEPENDS += "\
+    python3-packaging-native \
+    python3-vcs-versioning-native \
+"
 
 RDEPENDS:${PN} = "\
     python3-packaging \
