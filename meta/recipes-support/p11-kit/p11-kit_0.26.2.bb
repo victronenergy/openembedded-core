@@ -6,16 +6,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=02933887f609807fbb57aa4237d14a50"
 
 inherit meson gettext pkgconfig gtk-doc bash-completion manpages
 
-DEPENDS = "libtasn1 libtasn1-native libffi"
+DEPENDS = "libffi"
 
 DEPENDS:append = "${@' glib-2.0' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
-SRC_URI = "gitsm://github.com/p11-glue/p11-kit;branch=master;protocol=https;tag=${PV} \
-           "
+SRC_URI = "gitsm://github.com/p11-glue/p11-kit;branch=master;protocol=https;tag=${PV}"
 SRCREV = "8e6e4e6d64d9fe91c62b0052c105b2b72d4c24ef"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} trust"
+PACKAGECONFIG[systemd] = "-Dsystemd=enabled,-Dsystemd=disabled,systemd"
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native"
+PACKAGECONFIG[trust] = "-Dtrust_module=enabled,-Dtrust_module=disabled,libtasn1-native libtasn1"
 PACKAGECONFIG[trust-paths] = "-Dtrust_paths=/etc/ssl/certs/ca-certificates.crt,,,ca-certificates"
 
 EXTRA_OEMESON:append = " -Dnls=${@'false' if d.getVar('USE_NLS') == 'no' else 'true'}"
