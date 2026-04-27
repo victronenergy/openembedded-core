@@ -4,7 +4,7 @@ HOMEPAGE = "https://p11-glue.github.io/p11-glue/p11-kit.html"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=02933887f609807fbb57aa4237d14a50"
 
-inherit meson gettext pkgconfig gtk-doc bash-completion manpages
+inherit meson gettext pkgconfig gtk-doc bash-completion manpages lib_package
 
 DEPENDS = "libffi"
 
@@ -26,15 +26,22 @@ EXTRA_OEMESON = "\
 
 GTKDOC_MESON_OPTION = 'gtk_doc'
 
-FILES:${PN} += " \
-    ${libdir}/p11-kit-proxy.so \
-    ${libdir}/pkcs11/*.so \
-    ${libdir}/pkcs11/*.la \
-    ${datadir} \
-    ${systemd_user_unitdir}/*"
+PACKAGES =+ "${PN}-modules ${PN}-remote"
 
-# PN contains p11-kit-proxy.so, a symlink to a loadable module
-INSANE_SKIP:${PN} = "dev-so"
+FILES:${PN}-bin += "${libexecdir}/p11-kit/trust-extract-compat"
+
+FILES:${PN}-modules = "\
+    ${datadir}/p11-kit/modules \
+    ${libdir}/p11-kit-proxy.so \
+    ${libdir}/pkcs11"
+
+# p11-kit-proxy.so, a symlink to a loadable module
+INSANE_SKIP:${PN}-modules = "dev-so"
+
+FILES:${PN}-remote = "\
+    ${libexecdir}/p11-kit/p11-kit-remote \
+    ${libexecdir}/p11-kit/p11-kit-server \
+    ${systemd_user_unitdir}"
 
 BBCLASSEXTEND = "native nativesdk"
 
