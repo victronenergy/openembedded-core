@@ -63,5 +63,3 @@ do_install:append () {
     chmod 700 ${D}${DBDIR}
     chown dhcpcd:dhcpcd ${D}${DBDIR}
 }
-
-FILES:${PN}-dbg += "${libdir}/dhcpcd/dev/.debug"
