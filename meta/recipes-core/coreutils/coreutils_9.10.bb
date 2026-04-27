@@ -224,6 +224,6 @@ do_install_ptest:append:libc-musl () {
 }
 
 RDEPENDS:${PN}-ptest += "xz  \
-                         ${@bb.utils.contains('PACKAGECONFIG', 'acl', 'acl', '', d)} \
+                         ${@bb.utils.filter('PACKAGECONFIG', 'acl', d)} \
                          ${@bb.utils.contains('PACKAGECONFIG', 'xattr', 'attr', '', d)}"
 FILES:${PN}-ptest += "${bindir}/getlimits"
