@@ -19,7 +19,11 @@ PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native"
 PACKAGECONFIG[trust] = "-Dtrust_module=enabled,-Dtrust_module=disabled,libtasn1-native libtasn1"
 PACKAGECONFIG[trust-paths] = "-Dtrust_paths=/etc/ssl/certs/ca-certificates.crt,,,ca-certificates"
 
-EXTRA_OEMESON:append = " -Dnls=${@'false' if d.getVar('USE_NLS') == 'no' else 'true'}"
+EXTRA_OEMESON = "\
+    -Dtest=false \
+    -Dzsh_completion=disabled \
+    -Dnls=${@'false' if d.getVar('USE_NLS') == 'no' else 'true'}"
+
 GTKDOC_MESON_OPTION = 'gtk_doc'
 
 FILES:${PN} += " \
