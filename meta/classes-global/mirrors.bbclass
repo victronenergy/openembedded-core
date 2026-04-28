@@ -36,13 +36,6 @@ hg://.*/.*      https://downloads.yoctoproject.org/mirror/sources/ \
 https?://.*/.*  https://downloads.yoctoproject.org/mirror/sources/ \
 ftp://.*/.*     https://downloads.yoctoproject.org/mirror/sources/ \
 npm://.*/?.*    https://downloads.yoctoproject.org/mirror/sources/ \
-svn://.*/.*     http://sources.openembedded.org/ \
-git://.*/.*     http://sources.openembedded.org/ \
-gitsm://.*/.*   http://sources.openembedded.org/ \
-hg://.*/.*      http://sources.openembedded.org/ \
-https?://.*/.*  http://sources.openembedded.org/ \
-ftp://.*/.*     http://sources.openembedded.org/ \
-npm://.*/?.*    http://sources.openembedded.org/ \
 ${CPAN_MIRROR}  https://cpan.metacpan.org/ \
 https?://downloads.yoctoproject.org/releases/uninative/ https://mirrors.edge.kernel.org/yocto/uninative/ \
 https?://downloads.yoctoproject.org/mirror/sources/ https://mirrors.edge.kernel.org/yocto-sources/ \
