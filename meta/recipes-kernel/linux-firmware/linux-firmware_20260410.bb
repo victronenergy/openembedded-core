@@ -524,7 +524,7 @@ do_install() {
 PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-cw1200-license ${PN}-cw1200 \
              ${PN}-ralink-license ${PN}-ralink \
-             ${PN}-mt76x-license ${PN}-mt7601u ${PN}-mt7650 ${PN}-mt76x2 \
+             ${PN}-mt76x-license ${PN}-mt7601u ${PN}-mt7650 ${PN}-mt76x2 ${PN}-mt7996 \
              ${PN}-radeon-license ${PN}-radeon \
              ${PN}-amdgpu-license ${PN}-amdgpu \
              ${PN}-amdgpu-aldebaran \
@@ -1184,6 +1184,14 @@ FILES:${PN}-mt76x2 = " \
   ${firmwaredir}/mt7662_rom_patch.bin* \
 "
 RDEPENDS:${PN}-mt76x2 += "${PN}-mt76x-license"
+
+# MediaTek MT7996/MT7992/MT7990 (mt7996e.ko)
+LICENSE:${PN}-mt7996 = "Firmware-mediatek"
+
+FILES:${PN}-mt7996 = " \
+  ${firmwaredir}/mediatek/mt7996 \
+"
+RDEPENDS:${PN}-mt7996 += "${PN}-mediatek-license"
 
 # For MediaTek
 LICENSE:${PN}-mediatek = "Firmware-mediatek"
