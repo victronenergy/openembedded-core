@@ -511,6 +511,14 @@ do_install() {
                         path_to_file=$(dirname $path_to_file)
                 done
         done
+
+        # Some Nvidia firmware is shared but the symlinks cross product/driver boundaries,
+        # resulting in the -nvidia-tegra package depending on the ~150MB -nvidia-gpu package
+        # for a single 10kb file.
+        # Replace these symlinks with duplicates of the files to avoid this.
+        for symlink in $(find ${D}${firmwaredir}/nvidia/g*b/gr/ -type l -name sw_\*_init.bin); do
+          cp --remove-destination "$(readlink -f $symlink)" $symlink
+        done
 }
 
 PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
