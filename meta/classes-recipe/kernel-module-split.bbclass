@@ -185,6 +185,9 @@ python split_kernel_module_packages () {
 
 
     def frob_metadata(file, pkg, pattern, format, basename):
+        if "/.debug/" in file:
+            return
+
         vals = extract_modinfo(file)
         dvar = d.getVar('PKGD')
 
