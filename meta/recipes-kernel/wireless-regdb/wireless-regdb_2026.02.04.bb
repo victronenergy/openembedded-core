@@ -15,8 +15,8 @@ do_install() {
     install -m 0644 regulatory.bin ${D}${nonarch_libdir}/crda/regulatory.bin
     install -m 0644 wens.key.pub.pem ${D}${sysconfdir}/wireless-regdb/pubkeys/wens.key.pub.pem
 
-    install -m 0644 -D regulatory.db ${D}${nonarch_base_libdir}/firmware/regulatory.db
-    install -m 0644 regulatory.db.p7s ${D}${nonarch_base_libdir}/firmware/regulatory.db.p7s
+    install -m 0644 -D regulatory.db ${D}${firmwaredir}/regulatory.db
+    install -m 0644 regulatory.db.p7s ${D}${firmwaredir}/regulatory.db.p7s
 }
 
 # Install static regulatory DB in /lib/firmware for kernel to load.
@@ -27,8 +27,8 @@ PACKAGES = "${PN}-static ${PN}"
 RCONFLICTS:${PN} = "${PN}-static"
 
 FILES:${PN}-static = " \
-    ${nonarch_base_libdir}/firmware/regulatory.db \
-    ${nonarch_base_libdir}/firmware/regulatory.db.p7s \
+    ${firmwaredir}/regulatory.db \
+    ${firmwaredir}/regulatory.db.p7s \
 "
 
 # Native users might want to use the source of regulatory DB.
