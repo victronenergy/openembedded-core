@@ -121,7 +121,7 @@ FILES:${PN} += "${datadir}/dbus-1/system-services/* ${systemd_system_unitdir}/*"
 
 CONFFILES:${PN} += "${sysconfdir}/wpa_supplicant.conf"
 
-RRECOMMENDS:${PN} = "${PN}-passphrase ${PN}-cli ${PN}-plugins"
+RRECOMMENDS:${PN} = "${PN}-passphrase ${PN}-cli ${PN}-plugins wireless-regdb-static"
 
 SYSTEMD_SERVICE:${PN} = "wpa_supplicant.service"
 SYSTEMD_AUTO_ENABLE = "disable"
