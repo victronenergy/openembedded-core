@@ -8,7 +8,7 @@ SRC_URI = " \
 	file://0001-xb-selftest.c-hardcode-G_TEST_SRCDIR.patch \
 	file://run-ptest \
 "
-SRCREV = "b31dec072f4428123db3866c18bf32bc5db04d35"
+SRCREV = "f969b4dd491a7367f7500f55f576c810985363d7"
 
 DEPENDS = "glib-2.0 xz zstd"
 
