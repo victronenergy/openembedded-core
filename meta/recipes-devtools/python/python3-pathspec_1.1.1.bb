@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=815ca599c9df247a0c7f619bab123dad"
 
-SRC_URI[sha256sum] = "0210e2ae8a21a9137c0d470578cb0e595af87edaa6ebf12ff176f14a02e0e645"
+SRC_URI[sha256sum] = "17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a"
 
 inherit pypi python_flit_core
 
