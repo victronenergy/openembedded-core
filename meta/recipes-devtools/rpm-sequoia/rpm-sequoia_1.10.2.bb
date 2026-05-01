@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=htt
            file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
            file://run-ptest \
 "
-SRCREV = "140fd7eea182d8d58718572f89a85fe3eec29741"
+SRCREV = "401dbd9ae2eca087a82b7c15c0379f878aea02da"
 
 require ${BPN}-crates.inc
 
