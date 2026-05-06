@@ -1,7 +1,7 @@
 SUMMARY = "Text shaping library"
 DESCRIPTION = "HarfBuzz is an OpenType text shaping engine."
-HOMEPAGE = "http://www.freedesktop.org/wiki/Software/HarfBuzz"
-BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=HarfBuzz"
+HOMEPAGE = "https://harfbuzz.github.io"
+BUGTRACKER = "https://github.com/harfbuzz/harfbuzz"
 SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
@@ -10,8 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
 SRC_URI[sha256sum] = "6f6db164359a2da5a84ef826615b448b33e6306067ad829d85d5b0bf936f1bb8"
-
-DEPENDS += "glib-2.0-native"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection github-releases
 
@@ -25,17 +23,20 @@ FULL_OPTIMIZATION = "-Os ${DEBUG_LEVELFLAG}"
 
 EXTRA_OEMESON = "-Dtests=disabled"
 
-PACKAGECONFIG ??= "cairo freetype glib icu"
+PACKAGECONFIG ??= "cairo gobject glib icu freetype"
+
+# Optional harfbuzz libraries
 PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
-PACKAGECONFIG[chafa] = "-Dchafa=enabled,-Dchafa=disabled,chafa"
-PACKAGECONFIG[freetype] = "-Dfreetype=enabled,-Dfreetype=disabled,freetype"
+PACKAGECONFIG[gobject] = "-Dgobject=enabled,-Dgobject=disabled,glib-2.0-native glib-2.0"
+
+# Unicode providers
 PACKAGECONFIG[glib] = "-Dglib=enabled,-Dglib=disabled,glib-2.0"
-PACKAGECONFIG[graphite] = "-Dgraphite2=enabled,-Dgraphite2=disabled,graphite2"
 PACKAGECONFIG[icu] = "-Dicu=enabled,-Dicu=disabled,icu"
 
-PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
-
-LEAD_SONAME = "libharfbuzz.so"
+# Optional dependencies
+PACKAGECONFIG[chafa] = "-Dchafa=enabled,-Dchafa=disabled,chafa"
+PACKAGECONFIG[freetype] = "-Dfreetype=enabled,-Dfreetype=disabled,freetype"
+PACKAGECONFIG[graphite] = "-Dgraphite2=enabled,-Dgraphite2=disabled,graphite2"
 
 do_install:append() {
     # If no tools are installed due to PACKAGECONFIG then this directory might
@@ -43,11 +44,11 @@ do_install:append() {
     [ ! -d ${D}${bindir} ] || rmdir --ignore-fail-on-non-empty ${D}${bindir}
 }
 
-FILES:${PN}-icu = "${libdir}/libharfbuzz-icu.so.*"
-FILES:${PN}-icu-dev = "${libdir}/libharfbuzz-icu.so \
-                       ${libdir}/pkgconfig/harfbuzz-icu.pc \
-"
-FILES:${PN}-subset = "${libdir}/libharfbuzz-subset.so.*"
+python populate_packages:prepend () {
+    do_split_packages(d, '${libdir}', r'^libharfbuzz-(.+)\.so\..*$', '${PN}-%s', 'HarfBuzz %s library', allow_links=True, prepend=True)
+}
+
+PACKAGES_DYNAMIC = "^${PN}-.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
