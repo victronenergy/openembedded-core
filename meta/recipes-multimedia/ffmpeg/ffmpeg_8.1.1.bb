@@ -23,12 +23,10 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     "
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
-           file://0001-fftools-resources-Fix-double-build-by-disabling-.d-f.patch \
-           file://0001-ffbuild-commonmak-Consolidate-pattern-rules-for-comp.patch \
            file://0002-ffbuild-common.mak-ensure-target-directories-are-cre.patch \
            "
 
-SRC_URI[sha256sum] = "05ee0b03119b45c0bdb4df654b96802e909e0a752f72e4fe3794f487229e5a41"
+SRC_URI[sha256sum] = "b6863adde98898f42602017462871b5f6333e65aec803fdd7a6308639c52edf3"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
@@ -172,14 +170,9 @@ FILES:${PN}-examples = "${datadir}/${BPN}/examples"
 
 CVE_PRODUCT = "ffmpeg libswresample libavcodec"
 
-CVE_STATUS_GROUPS = "CVE_STATUS_WRONG_CPE"
-CVE_STATUS_WRONG_CPE = "CVE-2023-51791 CVE-2023-51793 CVE-2023-51794 CVE-2023-51795 CVE-2023-51796 CVE-2023-51797 CVE-2023-51798 CVE-2025-22921"
-CVE_STATUS_WRONG_CPE[status] = "fixed-version: these CVEs are fixed in used version"
-
 CVE_STATUS[CVE-2022-2566] = "fixed-version: these CVEs are fixed since v5.1.1"
 CVE_STATUS[CVE-2025-9951] = "fixed-version: these CVEs are fixed since v8.0"
 CVE_STATUS[CVE-2025-25468] = "fixed-version: these CVEs are fixed since v8.0"
 CVE_STATUS[CVE-2025-25469] = "fixed-version: these CVEs are fixed since v8.0"
-CVE_STATUS[CVE-2025-12343] = "fixed-version: this CVE are fixed since v8.0"
 CVE_STATUS[CVE-2025-59729] = "fixed-version: this CVE are fixed since v8.0"
 CVE_STATUS[CVE-2025-59730] = "fixed-version: this CVE are fixed since v8.0"
