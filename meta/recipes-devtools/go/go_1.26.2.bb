@@ -3,6 +3,8 @@ require go-target.inc
 
 inherit linuxloader ptest
 
+SRC_URI += "file://run-ptest"
+
 CGO_LDFLAGS:append = " -no-pie"
 
 export GO_LDSO = "${@get_linuxloader(d)}"
@@ -20,7 +22,9 @@ do_install_ptest() {
     install -d ${D}${PTEST_PATH}/src
     install -d ${D}${PTEST_PATH}/pkg/include
 
-    cp ${S}/pkg/include/* ${D}${PTEST_PATH}/pkg/include/
+    if ls ${S}/pkg/include/* >/dev/null 2>&1; then
+        cp ${S}/pkg/include/* ${D}${PTEST_PATH}/pkg/include/
+    fi
     echo "go${PV}" > ${D}${PTEST_PATH}/VERSION
 
     cd ${S}/src
@@ -40,4 +44,4 @@ do_install_ptest() {
         -exec install -m 0644 {} ${D}${PTEST_PATH}/src/{} \;
 }
 
-RDEPENDS:${PN}-ptest += "bash tzdata git packagegroup-core-buildessential"
+RDEPENDS:${PN}-ptest += "go tzdata git packagegroup-core-buildessential"
