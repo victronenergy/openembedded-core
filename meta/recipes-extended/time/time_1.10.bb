@@ -13,14 +13,9 @@ ALTERNATIVE_PRIORITY = "100"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI = "${GNU_MIRROR}/time/time-${PV}.tar.gz \
-           file://0001-include-string.h-for-memset.patch \
-           file://0002-maint-remove-K-R-declarations.patch \
-           file://0003-maint-fix-compilation-errors-with-GCC-15.patch \
-           file://0004-maint-remove-obsolete-autoconf-macros.patch \
-           "
+SRC_URI = "${GNU_MIRROR}/time/time-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "fbacf0c81e62429df3e33bda4cee38756604f18e01d977338e23306a3e3b521e"
+SRC_URI[sha256sum] = "e8c29fb4ab599d8478e41e8618f50db8aede9c90af27d0d2ef28ae50d5de09c3"
 
 inherit autotools
 
