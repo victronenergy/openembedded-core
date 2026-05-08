@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 PTEST_DIR=$(cd "$(dirname "$0")" && pwd)
-GOROOT=/usr/lib/go
+GOROOT=$(dirname "$PTEST_DIR")
 
 export GOROOT
 export PATH=$GOROOT/bin:$PATH
@@ -16,11 +16,18 @@ if [ -d "$GOROOT/src" ] && [ ! -L "$GOROOT/src" ]; then
 fi
 ln -sf "$PTEST_DIR/src" "$GOROOT/src"
 
-if [ -f "$PTEST_DIR/VERSION" ]; then
+CLEANUP_VERSION=0
+if [ -f "$PTEST_DIR/VERSION" ] && [ ! -f "$GOROOT/VERSION" ]; then
     cp "$PTEST_DIR/VERSION" "$GOROOT/VERSION"
+    CLEANUP_VERSION=1
 fi
+
+CLEANUP_INCLUDE=0
 if ls "$PTEST_DIR/pkg/include/"* >/dev/null 2>&1; then
-    mkdir -p "$GOROOT/pkg/include"
+    if [ ! -d "$GOROOT/pkg/include" ]; then
+        mkdir -p "$GOROOT/pkg/include"
+        CLEANUP_INCLUDE=1
+    fi
     cp "$PTEST_DIR/pkg/include/"* "$GOROOT/pkg/include/"
 fi
 
@@ -38,6 +45,7 @@ SKIP_PKGS="debug/dwarf debug/elf debug/pe debug/plan9obj go/types internal/xcoff
 
 SKIP_REGEX=$(echo "$SKIP_PKGS" | sed 's/ /|/g')
 
+RC=0
 for pkg in $(go list std); do
     # Skip package and all its subpackages
     if echo "$pkg" | grep -qE "^($SKIP_REGEX)(/|$)"; then
@@ -52,6 +60,7 @@ for pkg in $(go list std); do
     else
         echo "FAIL: $pkg"
         echo "$output"
+        RC=1
     fi
 done
 
@@ -60,4 +69,12 @@ rm -f "$GOROOT/src"
 if [ -d "$GOROOT/src.orig" ]; then
     mv "$GOROOT/src.orig" "$GOROOT/src"
 fi
+if [ $CLEANUP_VERSION -eq 1 ]; then
+    rm -f "$GOROOT/VERSION"
+fi
+if [ $CLEANUP_INCLUDE -eq 1 ]; then
+    rm -rf "$GOROOT/pkg/include"
+fi
 rm -rf "$GOCACHE"
+
+exit $RC
