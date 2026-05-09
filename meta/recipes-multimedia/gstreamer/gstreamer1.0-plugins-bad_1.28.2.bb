@@ -21,10 +21,14 @@ DEPENDS += "gstreamer1.0-plugins-base"
 
 inherit gobject-introspection
 
+# Vulkan requires a windowing system
+PACKAGECONFIG_VULKAN = "${@bb.utils.contains_any('DISTRO_FEATURES', 'x11 wayland', 'vulkan', '', d)}"
+
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'vulkan', '${PACKAGECONFIG_VULKAN}', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'directfb vulkan x11', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'directfb x11', d)} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'wayland', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gl', '', d)} \
     bz2 closedcaption curl dash dtls hls openssl sbc smoothstreaming \
