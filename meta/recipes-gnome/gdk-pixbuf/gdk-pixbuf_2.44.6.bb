@@ -110,3 +110,5 @@ do_install:append:class-native() {
 		GDK_PIXBUF_MODULEDIR=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders
 }
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_STATUS[CVE-2026-5201] = "fixed-version: fixed since v2.44.6"
