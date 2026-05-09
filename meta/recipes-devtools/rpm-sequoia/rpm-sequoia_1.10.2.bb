@@ -77,3 +77,5 @@ RDEPENDS:${PN} = "rpm-sequoia-crypto-policy"
 PACKAGE_WRITE_DEPS += "rpm-sequoia-crypto-policy-native"
 
 BBCLASSEXTEND = "native"
+
+CVE_STATUS[CVE-2026-2625] = "fixed-version: fixed since v1.10.2"
