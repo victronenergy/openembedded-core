@@ -8,6 +8,8 @@ LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=11618cb6a975948679286b1211bd573c"
 
 SRC_URI += "file://CVE-2024-39689.patch \
+            file://0001-Remove-emsign-437.patch \
+            file://0002-Restore-unaffected-emSign-roots-439-440.patch \
            "
 
 SRC_URI[sha256sum] = "0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f"
