@@ -63,6 +63,21 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-CVE-2026-6238-0004.patch \
            file://0029-CVE-2026-6238-0005.patch \
            file://0030-CVE-2026-6238-0006.patch \
+           file://0031-CVE-2026-5928.patch \
+           file://0032-CVE-2026-5450.patch \
+           file://0033-CVE-2026-6791.patch \
+           file://0034-CVE-2026-6368.patch \
+           file://0035-CVE-2026-19542.patch \
+           file://0036-CVE-2026-19499.patch \
+           file://0037-CVE-2026-77117.patch \
+           file://0038-CVE-2026-80489.patch \
+           file://0039-CVE-2026-77117-CVE-2026-80489.patch \
+           file://0040-CVE-2026-18374-01.patch \
+           file://0041-CVE-2026-18374-02.patch \
+           file://0042-CVE-2026-8674.patch \
+           file://0047-CVE-2026-89092.patch \
+           file://0048-CVE-2026-97399.patch \
+           file://0049-CVE-2026-86805-CVE-2026-95818.patch \
 "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"

@@ -9,41 +9,47 @@ SECTION = "console/network"
 LICENSE = "curl"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eed2e5088e1ac619c9a1c747da291d75"
 
-SRC_URI = " \
-    https://curl.se/download/${BP}.tar.xz \
-    file://721941aadf4adf4f6aeb3f4c0ab489bb89610c36.patch \
-    file://run-ptest \
-    file://disable-tests \
-    file://no-test-timeout.patch \
-    file://CVE-2024-6197.patch \
-    file://CVE-2024-7264-1.patch \
-    file://CVE-2024-7264-2.patch \
-    file://CVE-2024-8096.patch \
-    file://CVE-2024-9681.patch \
-    file://CVE-2024-11053-0001.patch \
-    file://CVE-2024-11053-0002.patch \
-    file://CVE-2024-11053-0003.patch \
-    file://CVE-2025-0167.patch \
-    file://CVE-2025-9086.patch \
-    file://CVE-2025-10148.patch \
-    file://CVE-2025-14017.patch \
-    file://CVE-2025-14524.patch \
-    file://0001-build-enable-Wcast-qual-fix-or-silence-compiler-warn.patch \
-    file://CVE-2025-14819.patch \
-    file://CVE-2025-15079.patch \
-    file://CVE-2025-15224.patch \
-    file://CVE-2026-1965-1.patch \
-    file://CVE-2026-1965-2.patch \
-    file://CVE-2026-3783.patch \
-    file://CVE-2026-3784.patch \
-    file://CVE-2026-5773.patch \
-    file://CVE-2026-6276.patch \
-    file://CVE-2026-5545.patch \
-    file://CVE-2026-6253.patch \
-    file://CVE-2026-4873.patch \
-    file://CVE-2026-13608.patch \
-    file://CVE-2026-8286.patch \
-"
+SRC_URI = "https://curl.se/download/${BP}.tar.xz \
+           file://721941aadf4adf4f6aeb3f4c0ab489bb89610c36.patch \
+           file://run-ptest \
+           file://disable-tests \
+           file://no-test-timeout.patch \
+           file://CVE-2024-6197.patch \
+           file://CVE-2024-7264-1.patch \
+           file://CVE-2024-7264-2.patch \
+           file://CVE-2024-8096.patch \
+           file://CVE-2024-9681.patch \
+           file://CVE-2024-11053-0001.patch \
+           file://CVE-2024-11053-0002.patch \
+           file://CVE-2024-11053-0003.patch \
+           file://CVE-2025-0167.patch \
+           file://CVE-2025-9086.patch \
+           file://CVE-2025-10148.patch \
+           file://CVE-2025-14017.patch \
+           file://CVE-2025-14524.patch \
+           file://0001-build-enable-Wcast-qual-fix-or-silence-compiler-warn.patch \
+           file://CVE-2025-14819.patch \
+           file://CVE-2025-15079.patch \
+           file://CVE-2025-15224.patch \
+           file://CVE-2026-1965-1.patch \
+           file://CVE-2026-1965-2.patch \
+           file://CVE-2026-3783.patch \
+           file://CVE-2026-3784.patch \
+           file://CVE-2026-5773.patch \
+           file://CVE-2026-6276.patch \
+           file://CVE-2026-5545.patch \
+           file://CVE-2026-6253.patch \
+           file://CVE-2026-4873.patch \
+           file://CVE-2026-13608.patch \
+           file://CVE-2026-8286.patch \
+           file://CVE-2026-80230.patch \
+           file://CVE-2026-92389.patch \
+           file://CVE-2026-18924.patch \
+           file://CVE-2026-86409.patch \
+           file://CVE-2026-92388-1.patch \
+           file://CVE-2026-92388-2.patch \
+           file://CVE-2026-87864.patch \
+           "
 
 SRC_URI:append:class-nativesdk = " \
            file://environment.d-curl.sh \
@@ -64,6 +70,7 @@ CVE_STATUS[CVE-2026-8458] = "${@bb.utils.contains('PACKAGECONFIG', 'krb5 negotia
 CVE_STATUS[CVE-2026-9547] = "not-applicable-config: vulnerable libssh backend is not enabled by the recipe"
 CVE_STATUS[CVE-2026-82209] = "not-applicable-config: public suffix list support is disabled by the recipe with --without-libpsl"
 CVE_STATUS[CVE-2026-12064] = "${@bb.utils.contains('PACKAGECONFIG', 'libssh2', 'unpatched', 'not-applicable-config: SCP/SFTP support is not enabled in PACKAGECONFIG', d)}"
+CVE_STATUS[CVE-2026-19931] = "${@bb.utils.contains('PACKAGECONFIG', 'krb5 negotiate-auth', 'unpatched', 'not-applicable-config: GSS-API Negotiate is disabled', d)}"
 
 inherit autotools pkgconfig binconfig multilib_header ptest
 
